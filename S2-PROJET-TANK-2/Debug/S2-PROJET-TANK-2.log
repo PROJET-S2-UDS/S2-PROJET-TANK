@@ -1,0 +1,3 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: Le répertoire intermédiaire (Debug\) contient des fichiers partagés provenant d'un autre projet (S2-PROJET-TANK-2.vcxproj). Cela peut entraîner un comportement de nettoyage et de regénération incorrect.
+  S2-PROJET-TANK.cpp
+  S2-PROJET-TANK-2.vcxproj -> C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\Debug\S2-PROJET-TANK.exe

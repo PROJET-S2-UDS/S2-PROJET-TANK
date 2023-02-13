@@ -1,0 +1,2 @@
+﻿  S2-PROJET-TANK-2.cpp
+ARM\Debug\S2-PROJET-TANK-2.obj : fatal error LNK1112: type d'ordinateur module 'x86' en conflit avec le type d'ordinateur cible 'ARM'
