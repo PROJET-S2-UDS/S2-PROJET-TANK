@@ -19,6 +19,9 @@ int main()
 {
     Map map;
     Tank player = Tank("Tristan", 100, 0, 0, Type::player);
+    int taille = 5;
+    Mur* mur[5] = { new Mur(3, 2, 4, Direction::Bas), new Mur(15, 13, 6, Direction::Haut), new Mur(10, 0, 6, Direction::Droit), new Mur(2, 13, 6, Direction::Gauche), new Mur(17, 17, 6, Direction::Haut) };
+    map.ajoutMur(mur, taille);
     map.ajouter(player);
     refresh(map, player);
     while (true)

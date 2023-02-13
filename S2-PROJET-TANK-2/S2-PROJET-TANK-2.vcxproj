@@ -206,6 +206,7 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="missile.cpp" />
     <ClCompile Include="munition.cpp" />
+    <ClCompile Include="mur.cpp" />
     <ClCompile Include="S2-PROJET-TANK.cpp" />
     <ClCompile Include="tank.cpp" />
   </ItemGroup>
@@ -213,6 +214,7 @@
     <ClInclude Include="bombe.h" />
     <ClInclude Include="canon.h" />
     <ClInclude Include="coordonnee.h" />
+    <ClInclude Include="mur.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="missile.h" />
     <ClInclude Include="munition.h" />

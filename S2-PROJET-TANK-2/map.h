@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "tank.h"
+#include "mur.h"
 
 #ifndef MAP_H
 #define MAP_H
@@ -21,6 +22,7 @@ public:
 	void ajouter(Tank& m_tank);
 	void retirer();
 	void deplacer(Tank& m_tank, std::string m_keyPress);
+	void ajoutMur(Mur* mur[], int m_taille);
 };
 
 #endif

@@ -1,4 +1,6 @@
 #include "map.h"
+#include "mur.h"
+
 
 Map::Map()
 {
@@ -88,6 +90,31 @@ void Map::deplacer(Tank& m_tank, std::string m_keyPress)
 		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = " ";
 		m_tank.moveY(1);
 		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = "~";
+	}
+}
+
+void Map::ajoutMur(Mur* mur[], int m_taille)
+{
+	for (int i = 0; i < m_taille; i++)
+	{
+		for (int z = 0; z < mur[i]->getLongueur(); z++)
+		{
+			if ((mur[i]->getCoordonnee().x + z) < taille  && (mur[i]->getCoordonnee().y + z) < taille) {
+				if (mur[i]->getDirection() == Direction::Haut)
+				{
+					map[mur[i]->getCoordonnee().x + z][mur[i]->getCoordonnee().y] = "#";
+				}
+				else if (mur[i]->getDirection() == Direction::Bas) {
+					map[mur[i]->getCoordonnee().x - z][mur[i]->getCoordonnee().y] = "#";
+				}
+				else if (mur[i]->getDirection() == Direction::Gauche) {
+					map[mur[i]->getCoordonnee().x][mur[i]->getCoordonnee().y - z] = "#";
+				}
+				else if (mur[i]->getDirection() == Direction::Droit) {
+					map[mur[i]->getCoordonnee().x][mur[i]->getCoordonnee().y + z] = "#";
+				}
+			}
+		}
 	}
 }
 
