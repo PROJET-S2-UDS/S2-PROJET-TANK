@@ -214,6 +214,7 @@
     <ClInclude Include="bombe.h" />
     <ClInclude Include="canon.h" />
     <ClInclude Include="coordonnee.h" />
+    <ClInclude Include="direction.h" />
     <ClInclude Include="mur.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="missile.h" />

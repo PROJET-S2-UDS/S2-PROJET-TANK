@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-
+#include <vector>
 #include "tank.h"
 #include "mur.h"
 
@@ -19,9 +19,9 @@ public:
 	Map();
 	Map(int m_taille);
 	void afficheMap();
-	void ajouter(Tank& m_tank);
+	void ajouter(Tank* m_tank);
 	void retirer();
-	void deplacer(Tank& m_tank, std::string m_keyPress);
+	void deplacer(Tank* m_tank, std::string m_keyPress);
 	void ajoutMur(Mur* mur[], int m_taille);
 };
 

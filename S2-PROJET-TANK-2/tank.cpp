@@ -55,6 +55,7 @@ void Tank::setName(std::string m_name)
 
 bool Tank::shoot()
 {
+	canon.tirer();
 	return false;
 }
 

@@ -35,17 +35,17 @@ void Map::afficheMap()
 	}
 }
 
-void Map::ajouter(Tank& m_tank)
+void Map::ajouter(Tank* m_tank)
 {
 	bool positionnementReussi = false;
 	bool XorY = true;
-	int tankX = m_tank.getCoordonnee().x;
-	int tankY = m_tank.getCoordonnee().y;
+	int tankX = m_tank->getCoordonnee().x;
+	int tankY = m_tank->getCoordonnee().y;
 	while (positionnementReussi == false)
 	{
 		if (map[tankX][tankY] == " ") {
 			map[tankX][tankY] = "~";
-			m_tank.setCoordonnee(tankX, tankY);
+			m_tank->setCoordonnee(tankX, tankY);
 			positionnementReussi = true;
 		}
 		else {
@@ -67,29 +67,29 @@ void Map::retirer()
 
 }
 
-void Map::deplacer(Tank& m_tank, std::string m_keyPress)
+void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 {
-	if (m_keyPress == "W" && map[m_tank.getCoordonnee().x - 1][m_tank.getCoordonnee().y] == " ") {
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = " ";
-		m_tank.moveX(-1);
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = "~";
+	if (m_keyPress == "W" && map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] == " ") {
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
+		m_tank->moveX(-1);
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "S" && map[m_tank.getCoordonnee().x + 1][m_tank.getCoordonnee().y] == " ") {
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = " ";
-		std::cout << m_tank.getCoordonnee().x << m_tank.getCoordonnee().y;
-		m_tank.moveX(1);
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = "~";
-		std::cout << m_tank.getCoordonnee().x << m_tank.getCoordonnee().y;
+	else if (m_keyPress == "S" && map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] == " ") {
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
+		std::cout << m_tank->getCoordonnee().x << m_tank->getCoordonnee().y;
+		m_tank->moveX(1);
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
+		std::cout << m_tank->getCoordonnee().x << m_tank->getCoordonnee().y;
 	}
-	else if (m_keyPress == "A" && map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y - 1] == " ") {
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = " ";
-		m_tank.moveY(-1);
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = "~";
+	else if (m_keyPress == "A" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] == " ") {
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
+		m_tank->moveY(-1);
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "D" && map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y + 1] == " ") {
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = " ";
-		m_tank.moveY(1);
-		map[m_tank.getCoordonnee().x][m_tank.getCoordonnee().y] = "~";
+	else if (m_keyPress == "D" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] == " ") {
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
+		m_tank->moveY(1);
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
 }
 

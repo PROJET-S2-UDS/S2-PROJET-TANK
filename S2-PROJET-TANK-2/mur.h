@@ -2,17 +2,10 @@
 
 #include <iostream>
 #include "coordonnee.h"
+#include "direction.h"
 
 #ifndef MUR_H
 #define MUR_H
-
-enum Direction
-{
-	Haut,
-	Bas,
-	Droit,
-	Gauche
-};
 
 class Mur
 {
