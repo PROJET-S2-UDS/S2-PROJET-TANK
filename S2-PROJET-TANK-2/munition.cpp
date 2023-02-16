@@ -16,3 +16,13 @@ void Munition::setPosition(int m_x, int m_y, Direction m_direction)
 	coordonnee.y = m_y;
 	direction = m_direction;
 }
+
+void Munition::setDegat(int m_degat)
+{
+	degat = m_degat;
+}
+
+int Munition::getDegat()
+{
+	return degat;
+}

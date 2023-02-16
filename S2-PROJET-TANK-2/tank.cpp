@@ -11,6 +11,7 @@ Tank::Tank(std::string m_name, int m_health, int m_x, int m_y, Type m_type)
 	coordonnee.x = m_x;
 	coordonnee.y = m_y;
 	type = m_type;
+	bombe.setDegat(50);
 }
 
 Tank::~Tank()
@@ -59,9 +60,9 @@ bool Tank::shoot()
 	return false;
 }
 
-bool Tank::dropBombe()
+void Tank::dropBombe(bool m_etat)
 {
-	return false;
+	bombe.setEtat(m_etat);
 }
 
 //Retourne vrai si il reste plus de vie
@@ -82,4 +83,14 @@ void Tank::moveX(int m_x)
 void Tank::moveY(int m_y)
 {
 	coordonnee.y += m_y;
+}
+
+bool Tank::getEtatBombe()
+{
+	return bombe.getEtat();
+}
+
+Bombe Tank::getBombe()
+{
+	return bombe;
 }

@@ -32,10 +32,12 @@ public:
 	void setHealth(int m_health);
 	void setName(std::string m_name);
 	bool shoot();
-	bool dropBombe();
+	void dropBombe(bool m_etat);
 	bool loseHealth(int m_health);
 	void moveX(int m_x);
 	void moveY(int m_y);
+	bool getEtatBombe();
+	Bombe getBombe();
 };
 
 #endif

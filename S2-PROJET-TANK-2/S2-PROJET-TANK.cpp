@@ -5,6 +5,7 @@
 #include <iostream>
 #include <windows.h> 
 #include <thread>
+#include <sstream>
 
 #include "map.h"
 #include "tank.h"
@@ -12,18 +13,31 @@
 
 using namespace std;
 
-void refresh(Map map, Tank* player) {
-    while (true)
+void ShowConsoleCursor(bool showFlag)
+{
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    CONSOLE_CURSOR_INFO     cursorInfo;
+
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = showFlag; // set the cursor visibility
+    SetConsoleCursorInfo(out, &cursorInfo);
+}
+
+void refresh(Map map, Tank* m_tank) {
+    while (m_tank->getHealth() > 0)
     {
-        system("CLS");
-        std::cout << "X: " << player->getCoordonnee().x << " Y: " << player->getCoordonnee().y << std::endl;
-        map.afficheMap();
-        Sleep(40);
+        COORD p = { 0,0 };
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
+        map.afficheMap(std::cout, m_tank);
     }
+    system("CLS");
+    cout << "Game Over !";
 }
 
 int main()
 {
+    ShowConsoleCursor(false);
     Map map;
     Tank* player = new Tank("Player", 100, 0, 0, Type::player);
     int taille = 5;
@@ -44,6 +58,9 @@ int main()
         }
         if (GetKeyState('D') & 0x8000) {
             map.deplacer(player, "D");
+        }
+        if (GetKeyState(VK_SPACE) & 0x8000) {
+            player->dropBombe(true);
         }
         Sleep(100);
     }

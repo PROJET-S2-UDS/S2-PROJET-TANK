@@ -23,15 +23,18 @@ Map::Map(int m_taille) {
 	genererMap();
 }
 
-void Map::afficheMap()
+void Map::afficheMap(std::ostream& o, Tank* m_tank)
 {
+	o.clear();
+	o << "X: " << m_tank->getCoordonnee().x << " Y: " << m_tank->getCoordonnee().y << std::endl;
+	o << "Vie : " << m_tank->getHealth() << "  " << std::endl;
 	for (int i = 0; i < taille; i++)
 	{
 		for (int z = 0; z < taille; z++)
 		{
-			std::cout << map[i][z];
+			o << map[i][z];
 		}
-		std::cout << std::endl;
+		o << std::endl;
 	}
 }
 
@@ -69,27 +72,42 @@ void Map::retirer()
 
 void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 {
-	if (m_keyPress == "W" && map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] == " ") {
+	Coordonnee coordonnee = m_tank->getCoordonnee();
+	if (m_keyPress == "W" && map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] != "#") {
+		if (map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] == "!") {
+			m_tank->loseHealth(m_tank->getBombe().getDegat());
+		}
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
 		m_tank->moveX(-1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "S" && map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] == " ") {
+	else if (m_keyPress == "S" && map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] != "#") {
+		if (map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] == "!") {
+			m_tank->loseHealth(m_tank->getBombe().getDegat());
+		}
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
-		std::cout << m_tank->getCoordonnee().x << m_tank->getCoordonnee().y;
 		m_tank->moveX(1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
-		std::cout << m_tank->getCoordonnee().x << m_tank->getCoordonnee().y;
 	}
-	else if (m_keyPress == "A" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] == " ") {
+	else if (m_keyPress == "A" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] != "#") {
+		if (map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] == "!") {
+			m_tank->loseHealth(m_tank->getBombe().getDegat());
+		}
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
 		m_tank->moveY(-1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "D" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] == " ") {
+	else if (m_keyPress == "D" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] != "#") {
+		if (map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] == "!") {
+			m_tank->loseHealth(m_tank->getBombe().getDegat());
+		}
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = " ";
 		m_tank->moveY(1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
+	}
+	if (m_tank->getEtatBombe()) {
+		map[coordonnee.x][coordonnee.y] = "!";
+		m_tank->dropBombe(false);
 	}
 }
 
