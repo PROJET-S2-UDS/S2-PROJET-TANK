@@ -16,9 +16,7 @@ using namespace std;
 void ShowConsoleCursor(bool showFlag)
 {
     HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
-
-    CONSOLE_CURSOR_INFO     cursorInfo;
-
+    CONSOLE_CURSOR_INFO cursorInfo;
     GetConsoleCursorInfo(out, &cursorInfo);
     cursorInfo.bVisible = showFlag; // set the cursor visibility
     SetConsoleCursorInfo(out, &cursorInfo);
@@ -35,6 +33,13 @@ void refresh(Map map, Tank* m_tank) {
     cout << "Game Over !";
 }
 
+void gestionMissiles(Map map) {
+    while (true)
+    {
+        map.deplacementMissileAffichage();
+    }
+}
+
 int main()
 {
     ShowConsoleCursor(false);
@@ -45,6 +50,7 @@ int main()
     map.ajoutMur(mur, taille);
     map.ajouter(player);
     thread affichage(refresh, map, player);
+    thread gestionMissile(gestionMissiles, map);
     while (true)
     {
         if (GetKeyState('W') & 0x8000) {
@@ -61,6 +67,21 @@ int main()
         }
         if (GetKeyState(VK_SPACE) & 0x8000) {
             player->dropBombe(true);
+        }
+        if (GetKeyState('E') & 0x8000) {
+            player->shoot(true);
+        }
+        if (GetKeyState(VK_UP) & 0x8000) {
+            map.deplacerCanon(player, "UP", 1);
+        }
+        if (GetKeyState(VK_DOWN) & 0x8000) {
+            map.deplacerCanon(player, "DOWN", 1);
+        }
+        if (GetKeyState(VK_LEFT) & 0x8000) {
+            map.deplacerCanon(player, "LEFT", 1);
+        }
+        if (GetKeyState(VK_RIGHT) & 0x8000) {
+            map.deplacerCanon(player, "RIGHT", 1);
         }
         Sleep(100);
     }

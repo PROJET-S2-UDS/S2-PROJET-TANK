@@ -17,11 +17,17 @@ private:
 	Missile missile;
 public:
 	Canon();
-	Canon(int m_x, int m_y, Direction m_direction, Missile m_missile);
+	Canon(int m_x, int m_y, Direction m_direction);
 	~Canon();
-	void bougerCanon(Coordonnee coordonnee, Direction direction);
-	bool tirer();
+	void bougerCanon(Coordonnee m_coordonnee, Direction m_direction);
+	void tirer(bool m_etat);
 	void afficher();
+	bool getEtatMissile();
+	Missile getMissile();
+	void moveX(int m_x);
+	void moveY(int m_y);
+	Coordonnee getCoordonnee();
+	Direction getDirection();
 };
 
 #endif

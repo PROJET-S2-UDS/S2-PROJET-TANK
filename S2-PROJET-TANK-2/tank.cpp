@@ -12,6 +12,10 @@ Tank::Tank(std::string m_name, int m_health, int m_x, int m_y, Type m_type)
 	coordonnee.y = m_y;
 	type = m_type;
 	bombe.setDegat(50);
+	Coordonnee coordonneeCanon;
+	coordonneeCanon.x = m_x;
+	coordonneeCanon.y = m_y;
+	canon = Canon(m_x,m_y + 1,Direction::Bas);
 }
 
 Tank::~Tank()
@@ -54,10 +58,9 @@ void Tank::setName(std::string m_name)
 	name = m_name;
 }
 
-bool Tank::shoot()
+void Tank::shoot(bool m_etat)
 {
-	canon.tirer();
-	return false;
+	return canon.tirer(m_etat);
 }
 
 void Tank::dropBombe(bool m_etat)
@@ -94,3 +97,37 @@ Bombe Tank::getBombe()
 {
 	return bombe;
 }
+
+bool Tank::getEtatMissile()
+{
+	return canon.getEtatMissile();
+}
+
+Missile Tank::getMissile()
+{
+	return Missile();
+}
+
+Canon Tank::getCanon()
+{
+	return canon;
+}
+
+void Tank::setPositionCanon(int m_x, int m_y, Direction m_direction)
+{
+	Coordonnee coordonneePosition;
+	coordonneePosition.x = m_x;
+	coordonneePosition.y = m_y;
+	canon.bougerCanon(coordonneePosition, m_direction);
+}
+
+void Tank::moveXCanon(int m_x)
+{
+	canon.moveX(m_x);
+}
+
+void Tank::moveYCanon(int m_y)
+{
+	canon.moveY(m_y);
+}
+

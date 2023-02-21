@@ -31,13 +31,20 @@ public:
 	Type getType();
 	void setHealth(int m_health);
 	void setName(std::string m_name);
-	bool shoot();
+	void shoot(bool m_etat);
 	void dropBombe(bool m_etat);
 	bool loseHealth(int m_health);
 	void moveX(int m_x);
 	void moveY(int m_y);
 	bool getEtatBombe();
 	Bombe getBombe();
+	bool getEtatMissile();
+	Missile getMissile();
+	Canon getCanon();
+	void setPositionCanon(int m_x, int m_y, Direction m_direction);
+	void moveXCanon(int m_x);
+	void moveYCanon(int m_y);
+
 };
 
 #endif

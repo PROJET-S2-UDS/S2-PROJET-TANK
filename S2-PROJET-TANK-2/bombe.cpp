@@ -17,13 +17,3 @@ void Bombe::setCoordonnee(Coordonnee m_coordonnee)
 {
 	coordonnee = m_coordonnee;
 }
-
-bool Bombe::getEtat()
-{
-	return etat;
-}
-
-void Bombe::setEtat(bool m_etat)
-{
-	etat = m_etat;
-}

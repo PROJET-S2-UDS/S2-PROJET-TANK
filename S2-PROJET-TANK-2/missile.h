@@ -13,6 +13,8 @@ public:
 	Missile();
 	Missile(Coordonnee m_coordonnee, Direction m_direction);
 	~Missile();
+	void moveX(int m_x);
+	void moveY(int m_y);
 };
 
 #endif

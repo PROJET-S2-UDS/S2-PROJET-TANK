@@ -26,3 +26,13 @@ int Munition::getDegat()
 {
 	return degat;
 }
+
+bool Munition::getEtat()
+{
+	return etat;
+}
+
+void Munition::setEtat(bool m_etat)
+{
+	etat = m_etat;
+}
