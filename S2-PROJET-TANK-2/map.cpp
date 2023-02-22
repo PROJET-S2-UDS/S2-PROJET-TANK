@@ -5,8 +5,10 @@
 Map::Map()
 {
 	taille = 20;
+	nombreEnnemie = 5;
 	map = new std::string*[20];
-	missilles = new std::vector<Missile>;
+	missilles = new std::vector<Missile*>;
+	tanks = new std::vector<TankEnnemie*>;
 	for (int i = 0; i < 20; i++)
 	{
 		map[i] = new std::string[20];
@@ -14,9 +16,12 @@ Map::Map()
 	genererMap();
 }
 
-Map::Map(int m_taille) {
+Map::Map(int m_taille, int m_nombreEnnemie) {
 	taille = m_taille;
-	map = new std::string * [m_taille];
+	nombreEnnemie = m_nombreEnnemie;
+	map = new std::string*[m_taille];
+	missilles = new std::vector<Missile*>;
+	tanks = new std::vector<TankEnnemie*>;
 	for (int i = 0; i < m_taille; i++)
 	{
 		map[i] = new std::string[m_taille];
@@ -101,15 +106,17 @@ void Map::ajouter(Tank* m_tank)
 	}
 }
 
-void Map::retirer()
+void Map::retirer(int index)
 {
-
+	tanks->erase(tanks->begin() + index);
 }
 
 void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 {
 	Coordonnee coordonnee = m_tank->getCoordonnee();
-	if (m_keyPress == "W" && map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] != "#") {
+	if (m_keyPress == "W" && map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] != "#" &&
+		map[m_tank->getCoordonnee().x - 2][m_tank->getCoordonnee().y] != "~" &&
+		map[m_tank->getCoordonnee().x - 2][m_tank->getCoordonnee().y] != "^") {
 		if (map[m_tank->getCoordonnee().x - 1][m_tank->getCoordonnee().y] == "!") {
 			m_tank->loseHealth(m_tank->getBombe().getDegat());
 		}
@@ -121,7 +128,9 @@ void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 		m_tank->moveX(-1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "S" && map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] != "#") {
+	else if (m_keyPress == "S" && map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] != "#" &&
+		map[m_tank->getCoordonnee().x + 2][m_tank->getCoordonnee().y] != "~" &&
+		map[m_tank->getCoordonnee().x + 2][m_tank->getCoordonnee().y] != "^") {
 		if (map[m_tank->getCoordonnee().x + 1][m_tank->getCoordonnee().y] == "!") {
 			m_tank->loseHealth(m_tank->getBombe().getDegat());
 		}
@@ -133,7 +142,9 @@ void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 		m_tank->moveX(1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "A" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] != "#") {
+	else if (m_keyPress == "A" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] != "#" &&
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 2] != "~" &&
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 2] != "<") {
 		if (map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y - 1] == "!") {
 			m_tank->loseHealth(m_tank->getBombe().getDegat());
 		}
@@ -145,7 +156,9 @@ void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 		m_tank->moveY(-1);
 		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y] = "~";
 	}
-	else if (m_keyPress == "D" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] != "#") {
+	else if (m_keyPress == "D" && map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] != "#" &&
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 2] != "~" &&
+		map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 2] != ">") {
 		if (map[m_tank->getCoordonnee().x][m_tank->getCoordonnee().y + 1] == "!") {
 			m_tank->loseHealth(m_tank->getBombe().getDegat());
 		}
@@ -219,21 +232,56 @@ void Map::SpawnMissile(Tank* m_tank)
 		Coordonnee coordonneeCanon = m_tank->getCanon().getCoordonnee();
 		if (m_tank->getCanon().getDirection() == Direction::Haut && map[coordonneeCanon.x -1][coordonneeCanon.y] == " ") {
 			map[coordonneeCanon.x - 1][coordonneeCanon.y] = "*";
-			missilles->push_back(Missile(coordonneeCanon,Direction::Haut));
+			missilles->push_back(new Missile(coordonneeCanon,Direction::Haut, 20));
 		}
 		if (m_tank->getCanon().getDirection() == Direction::Bas && map[coordonneeCanon.x + 1][coordonneeCanon.y] == " ") {
 			map[coordonneeCanon.x + 1][coordonneeCanon.y] = "*";
-			missilles->push_back(Missile(coordonneeCanon, Direction::Bas));
+			missilles->push_back(new Missile(coordonneeCanon, Direction::Bas, 20));
 		}
 		if (m_tank->getCanon().getDirection() == Direction::Gauche && map[coordonneeCanon.x][coordonneeCanon.y - 1] == " ") {
 			map[coordonneeCanon.x][coordonneeCanon.y - 1] = "*";
-			missilles->push_back(Missile(coordonneeCanon, Direction::Gauche));
+			missilles->push_back(new Missile(coordonneeCanon, Direction::Gauche, 20));
 		}
 		if (m_tank->getCanon().getDirection() == Direction::Droit && map[coordonneeCanon.x][coordonneeCanon.y + 1] == " ") {
 			map[coordonneeCanon.x][coordonneeCanon.y + 1] = "*";
-			missilles->push_back(Missile(coordonneeCanon, Direction::Droit));
+			missilles->push_back(new Missile(coordonneeCanon, Direction::Droit, 20));
 		}
 		m_tank->shoot(false);
+	}
+}
+
+void Map::degatEnnemie(Missile* m_missile)
+{
+	int x = 0;
+	int y = 0;
+	switch (m_missile->getDirection())
+	{
+	case Direction::Haut:
+		x = -1;
+		break;
+	case Direction::Bas:
+		x = 1;
+		break;
+	case Direction::Droit:
+		y = 1;
+		break;
+	case Direction::Gauche:
+		y = -1;
+		break;
+	default:
+		break;
+	}
+	for (int i = 0; i < tanks->size(); i++)
+	{
+		Coordonnee tankCoordonnee = tanks->at(i)->getCoordonnee();
+		Coordonnee missileCoordonnee = m_missile->getCoordonnee();
+		if (tankCoordonnee.x == (missileCoordonnee.x + x) && tankCoordonnee.y == (missileCoordonnee.y + y)) {
+			if (tanks->at(i)->loseHealth(m_missile->getDegat())) {
+				map[tanks->at(i)->getCoordonnee().x][tanks->at(i)->getCoordonnee().y] = " ";
+				map[tanks->at(i)->getCanon().getCoordonnee().x][tanks->at(i)->getCanon().getCoordonnee().y] = " ";
+				retirer(i);
+			}
+		}
 	}
 }
 
@@ -242,40 +290,55 @@ void Map::deplacementMissileAffichage()
 	if (missilles->size() != 0) {
 		for (int i = 0; i < missilles->size(); i++)
 		{
-			if (missilles->at(i).getDirection() == Direction::Haut) {
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = " ";
-				missilles->at(i).moveX(-1);
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = "*";
+			if (missilles->at(i)->getDirection() == Direction::Haut) {
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
+				missilles->at(i)->moveX(-1);
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = "*";
 			}
-			if (missilles->at(i).getDirection() == Direction::Bas) {
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = " ";
-				missilles->at(i).moveX(1);
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = "*";
+			if (missilles->at(i)->getDirection() == Direction::Bas) {
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
+				missilles->at(i)->moveX(1);
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = "*";
 			}
-			if (missilles->at(i).getDirection() == Direction::Gauche) {
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = " ";
-				missilles->at(i).moveY(-1);
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = "*";
+			if (missilles->at(i)->getDirection() == Direction::Gauche) {
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
+				missilles->at(i)->moveY(-1);
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = "*";
 			}
-			if (missilles->at(i).getDirection() == Direction::Droit) {
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = " ";
-				missilles->at(i).moveY(1);
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = "*";
+			if (missilles->at(i)->getDirection() == Direction::Droit) {
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
+				missilles->at(i)->moveY(1);
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = "*";
 			}
-			if ((map[missilles->at(i).getCoordonnee().x + 1][missilles->at(i).getCoordonnee().y] == "#" || 
-				map[missilles->at(i).getCoordonnee().x - 1][missilles->at(i).getCoordonnee().y] == "#") &&
-				(missilles->at(i).getDirection() == Direction::Haut || missilles->at(i).getDirection() == Direction::Bas)) {
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = " ";
+			if ((map[missilles->at(i)->getCoordonnee().x + 1][missilles->at(i)->getCoordonnee().y] != " " || 
+				map[missilles->at(i)->getCoordonnee().x - 1][missilles->at(i)->getCoordonnee().y] != " ") &&
+				(missilles->at(i)->getDirection() == Direction::Haut || missilles->at(i)->getDirection() == Direction::Bas)) {
+				degatEnnemie(missilles->at(i));
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
 				missilles->erase(missilles->begin() + i);
 			}
-			else if ((map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y + 1] == "#" ||
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y - 1] == "#") && 
-				(missilles->at(i).getDirection() == Direction::Droit || missilles->at(i).getDirection() == Direction::Gauche)) {
-				map[missilles->at(i).getCoordonnee().x][missilles->at(i).getCoordonnee().y] = " ";
+			else if ((map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y + 1] != " " ||
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y - 1] != " ") && 
+				(missilles->at(i)->getDirection() == Direction::Droit || missilles->at(i)->getDirection() == Direction::Gauche)) {
+				degatEnnemie(missilles->at(i));
+				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
 				missilles->erase(missilles->begin() + i);
 			}
 			Sleep(80); //Temps d'affichage du missile
 		}
+	}
+}
+
+void Map::spawnTankEnnemie(int m_nombreEnnemie, int m_degat, int m_health, Tank* m_tank)
+{
+	nombreEnnemie = m_nombreEnnemie;
+	for (int i = 0; i < nombreEnnemie; i++)
+	{
+		int x = rand() % taille;
+		int y = rand() % taille;
+		TankEnnemie* ennemie = new TankEnnemie(m_tank,std::to_string(i), m_health, x, y, Type::ennemy);
+		ajouter(ennemie);
+		tanks->push_back(ennemie);
 	}
 }
 

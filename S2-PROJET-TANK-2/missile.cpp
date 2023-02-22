@@ -6,11 +6,11 @@ Missile::Missile()
 	etat = false;
 }
 
-Missile::Missile(Coordonnee m_coordonnee, Direction m_direction)
+Missile::Missile(Coordonnee m_coordonnee, Direction m_direction, int m_degat)
 {
 	coordonnee = m_coordonnee;
 	direction = m_direction;
-	degat = 20;
+	degat = m_degat;
 	etat = true;
 }
 

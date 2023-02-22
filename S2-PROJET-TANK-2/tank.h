@@ -12,14 +12,13 @@
 
 class Tank
 {
-private:
+protected:
 	std::string name;
 	int health;
 	Coordonnee coordonnee;
 	Bombe bombe;
 	Canon canon;
 	Type type;
-
 public:
 	Tank();
 	Tank(std::string m_name, int m_health, int m_x, int m_y, Type m_type);
@@ -44,7 +43,6 @@ public:
 	void setPositionCanon(int m_x, int m_y, Direction m_direction);
 	void moveXCanon(int m_x);
 	void moveYCanon(int m_y);
-
 };
 
 #endif

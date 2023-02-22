@@ -209,6 +209,7 @@
     <ClCompile Include="mur.cpp" />
     <ClCompile Include="S2-PROJET-TANK.cpp" />
     <ClCompile Include="tank.cpp" />
+    <ClCompile Include="tankEnnemie.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bombe.h" />
@@ -220,6 +221,7 @@
     <ClInclude Include="missile.h" />
     <ClInclude Include="munition.h" />
     <ClInclude Include="tank.h" />
+    <ClInclude Include="tankEnnemie.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

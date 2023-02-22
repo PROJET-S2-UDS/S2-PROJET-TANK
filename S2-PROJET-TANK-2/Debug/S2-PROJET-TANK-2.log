@@ -1,5 +1,10 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: Le répertoire intermédiaire (Debug\) contient des fichiers partagés provenant d'un autre projet (S2-PROJET-TANK-2.vcxproj). Cela peut entraîner un comportement de nettoyage et de regénération incorrect.
+  S2-PROJET-TANK.cpp
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\tankEnnemie.h(4,10): warning C4067: jetons inattendus après la directive du préprocesseur - saut de ligne attendu
   map.cpp
-C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(41,14): warning C4930: 'std::thread deplacementMissileAffichage(void)' : fonction prototypée non appelée (était-ce la définition de variable souhaitée ?)
-C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(243,21): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\tankEnnemie.h(4,10): warning C4067: jetons inattendus après la directive du préprocesseur - saut de ligne attendu
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(46,14): warning C4930: 'std::thread deplacementMissileAffichage(void)' : fonction prototypée non appelée (était-ce la définition de variable souhaitée ?)
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(274,20): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(291,21): warning C4018: '<' : incompatibilité signed/unsigned
+  Génération de code en cours...
   S2-PROJET-TANK-2.vcxproj -> C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\Debug\S2-PROJET-TANK.exe

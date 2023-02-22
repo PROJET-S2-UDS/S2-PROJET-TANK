@@ -49,6 +49,7 @@ int main()
     Mur* mur[5] = { new Mur(3, 2, 4, Direction::Bas), new Mur(15, 13, 6, Direction::Haut), new Mur(10, 0, 6, Direction::Droit), new Mur(2, 13, 6, Direction::Gauche), new Mur(17, 17, 6, Direction::Haut) };
     map.ajoutMur(mur, taille);
     map.ajouter(player);
+    map.spawnTankEnnemie(6,20,100, player);
     thread affichage(refresh, map, player);
     thread gestionMissile(gestionMissiles, map);
     while (true)
