@@ -18,12 +18,14 @@ private:
 	std::string** map;
 	int taille;
 	int nombreEnnemie;
+	Tank* player;
 	std::vector<Missile*>* missilles;
 	std::vector<TankEnnemie*>* tanks;
 	void genererMap();
 	void SpawnMissile(Tank* m_tank);
 	void degatEnnemie(Missile* m_missile);
 	void retirer(int index);
+	void pathEnnemie();
 public:
 	Map();
 	Map(int m_taille, int m_nombreEnnemie);

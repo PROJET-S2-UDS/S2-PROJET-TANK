@@ -1,6 +1,7 @@
 #include "map.h"
 #include "mur.h"
 
+int rayonEnnemie = 8;
 
 Map::Map()
 {
@@ -9,6 +10,7 @@ Map::Map()
 	map = new std::string*[20];
 	missilles = new std::vector<Missile*>;
 	tanks = new std::vector<TankEnnemie*>;
+	player = NULL;
 	for (int i = 0; i < 20; i++)
 	{
 		map[i] = new std::string[20];
@@ -22,6 +24,7 @@ Map::Map(int m_taille, int m_nombreEnnemie) {
 	map = new std::string*[m_taille];
 	missilles = new std::vector<Missile*>;
 	tanks = new std::vector<TankEnnemie*>;
+	player = NULL;
 	for (int i = 0; i < m_taille; i++)
 	{
 		map[i] = new std::string[m_taille];
@@ -43,6 +46,7 @@ void Map::afficheMap(std::ostream& o, Tank* m_tank)
 		o << std::endl;
 	}
 	SpawnMissile(m_tank);
+	pathEnnemie();
 	std::thread deplacementMissileAffichage();
 }
 
@@ -59,6 +63,9 @@ void Map::ajouter(Tank* m_tank)
 		if (map[tankX][tankY] == " ") {
 			map[tankX][tankY] = "~";
 			m_tank->setCoordonnee(tankX, tankY);
+			if (player == NULL) {
+				player = m_tank;
+			}
 			positionnementReussi = true;
 		}
 		else {
@@ -109,6 +116,55 @@ void Map::ajouter(Tank* m_tank)
 void Map::retirer(int index)
 {
 	tanks->erase(tanks->begin() + index);
+}
+
+void Map::pathEnnemie()
+{
+	for (int i = 0; i < tanks->size(); i++)
+	{
+		TankEnnemie* tankEnnemie = tanks->at(i);
+		Coordonnee coordonneePlayer = tanks->at(i)->getTarget()->getCoordonnee();
+		Coordonnee coordonneeEnnemeie = tanks->at(i)->getCoordonnee();
+		bool cheminPlusCourt = false;
+		int differenceX = coordonneePlayer.x - coordonneeEnnemeie.x;
+		int differenceY = coordonneePlayer.y - coordonneeEnnemeie.y;
+		if ((coordonneePlayer.x == coordonneeEnnemeie.x) && std::abs(coordonneePlayer.y - coordonneeEnnemeie.y) <= rayonEnnemie) {
+			if ((coordonneePlayer.y - coordonneeEnnemeie.y) < 0) {
+				deplacerCanon(tankEnnemie, "LEFT", 1);
+			}
+			else if ((coordonneePlayer.y - coordonneeEnnemeie.y) > 0) {
+				deplacerCanon(tankEnnemie, "RIGHT", 1);
+			}
+			tankEnnemie->shoot(true);
+			SpawnMissile(tankEnnemie);
+		}
+		if ((coordonneePlayer.y == coordonneeEnnemeie.y) && std::abs(coordonneePlayer.x - coordonneeEnnemeie.x) <= rayonEnnemie) {
+			if ((coordonneePlayer.x - coordonneeEnnemeie.x) < 0) {
+				deplacerCanon(tankEnnemie, "UP", 1);
+			}
+			else if ((coordonneePlayer.x - coordonneeEnnemeie.x) > 0) {
+				deplacerCanon(tankEnnemie, "DOWN", 1);
+			}
+			tankEnnemie->shoot(true);
+			SpawnMissile(tankEnnemie);
+		}
+		/*if (differenceX <= differenceY) {
+			if (differenceX < 0) {
+				deplacer(tankEnnemie, "W");
+			}
+			else if (differenceX > 0){
+				deplacer(tankEnnemie, "S");
+			}
+		}
+		else if (differenceX > differenceY) {
+			if (differenceY < 0) {
+				deplacer(tankEnnemie, "A");
+			}
+			else if (differenceY > 0) {
+				deplacer(tankEnnemie, "D");
+			}
+		}*/
+	}
 }
 
 void Map::deplacer(Tank* m_tank, std::string m_keyPress)
@@ -271,10 +327,17 @@ void Map::degatEnnemie(Missile* m_missile)
 	default:
 		break;
 	}
+	Coordonnee missileCoordonnee = m_missile->getCoordonnee();
+	Coordonnee tankPlayer = player->getCoordonnee();
+	if (tankPlayer.x == (missileCoordonnee.x + x) && tankPlayer.y == (missileCoordonnee.y + y)) {
+		if (player->loseHealth(m_missile->getDegat())) {
+			map[player->getCoordonnee().x][player->getCoordonnee().y] = " ";
+			map[player->getCanon().getCoordonnee().x][player->getCanon().getCoordonnee().y] = " ";
+		}
+	}
 	for (int i = 0; i < tanks->size(); i++)
 	{
 		Coordonnee tankCoordonnee = tanks->at(i)->getCoordonnee();
-		Coordonnee missileCoordonnee = m_missile->getCoordonnee();
 		if (tankCoordonnee.x == (missileCoordonnee.x + x) && tankCoordonnee.y == (missileCoordonnee.y + y)) {
 			if (tanks->at(i)->loseHealth(m_missile->getDegat())) {
 				map[tanks->at(i)->getCoordonnee().x][tanks->at(i)->getCoordonnee().y] = " ";
@@ -324,7 +387,7 @@ void Map::deplacementMissileAffichage()
 				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
 				missilles->erase(missilles->begin() + i);
 			}
-			Sleep(80); //Temps d'affichage du missile
+			Sleep(100); //Temps d'affichage du missile
 		}
 	}
 }
