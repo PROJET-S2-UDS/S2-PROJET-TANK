@@ -2,7 +2,7 @@
 
 Missile::Missile()
 {
-	degat = 20;
+	degat = 50;
 	etat = false;
 }
 
@@ -10,7 +10,7 @@ Missile::Missile(Coordonnee m_coordonnee, Direction m_direction, int m_degat)
 {
 	coordonnee = m_coordonnee;
 	direction = m_direction;
-	degat = m_degat;
+	degat = 40;
 	etat = true;
 }
 

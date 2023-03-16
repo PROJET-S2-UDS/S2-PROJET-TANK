@@ -1,0 +1,22 @@
+﻿  bombe.cpp
+  canon.cpp
+  map.cpp
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\tankEnnemie.h(4,10): warning C4067: jetons inattendus après la directive du préprocesseur - saut de ligne attendu
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(52,14): warning C4930: 'std::thread deplacementMissileAffichage(void)' : fonction prototypée non appelée (était-ce la définition de variable souhaitée ?)
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(136,20): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(169,21): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(355,20): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(594,20): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(610,21): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(740,12): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\map.cpp(785,20): warning C4018: '<' : incompatibilité signed/unsigned
+  missile.cpp
+  munition.cpp
+  mur.cpp
+  S2-PROJET-TANK.cpp
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\tankEnnemie.h(4,10): warning C4067: jetons inattendus après la directive du préprocesseur - saut de ligne attendu
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\S2-PROJET-TANK.cpp(77,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+  tank.cpp
+  tankEnnemie.cpp
+C:\Users\tristanlafontaine\Documents\S2-PROJET-TANK\S2-PROJET-TANK-2\tankEnnemie.h(4,10): warning C4067: jetons inattendus après la directive du préprocesseur - saut de ligne attendu
+ARM\Release\bombe.obj : fatal error LNK1112: type d'ordinateur module 'x86' en conflit avec le type d'ordinateur cible 'ARM'
