@@ -6,12 +6,14 @@
 #include <windows.h> 
 #include <thread>
 #include <sstream>
+#include <time.h>
 
 #include "map.h"
 #include "tank.h"
 #include "direction.h"
 
 using namespace std;
+
 
 void ShowConsoleCursor(bool showFlag)
 {
@@ -22,49 +24,82 @@ void ShowConsoleCursor(bool showFlag)
     SetConsoleCursorInfo(out, &cursorInfo);
 }
 
-void refresh(Map map, Tank* m_tank) {
-    while (m_tank->getHealth() > 0)
-    {
-        COORD p = { 0,0 };
-        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
-        map.afficheMap(std::cout, m_tank);
-    }
-    system("CLS");
-    cout << "Game Over !";
-}
-
-void gestionMissiles(Map map) {
+void gestionMissiles(Map* map) {
     while (true)
     {
-        map.deplacementMissileAffichage();
+        map->deplacementMissileAffichage();
+    }
+}
+
+void gestionEnnemies(Map* map) {
+    while (true)
+    {
+        map->pathEnnemie();
+    }
+}
+
+void refresh(Map* map, Tank* m_tank, int maxNiveau) {
+    for (int i = 0; i < maxNiveau; i++)
+    {
+        bool boucle = true;
+        while (boucle)
+        {
+            COORD p = { 0,0 };
+            SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
+            map->afficheMap(std::cout, m_tank);
+            if (m_tank->getHealth() <= 0) {
+                boucle = false;
+            }
+            else if (map->getTanks()->empty()) {
+                boucle = false;
+            }
+        }
+        if (m_tank->getHealth() <= 0) {
+            system("CLS");
+            cout << "Game Over !";
+        }
+        else if (map->getTanks()->empty()) {
+            system("CLS");
+            int tailleMap = map->getTaille();
+            int nombreEnnemie = map->getNombreEnnemie();
+            map = nullptr;
+            map = new Map(tailleMap, nombreEnnemie + 1);
+            map->addOneNiveau();
+            map->generateurMap();
+            system("CLS");
+        }
     }
 }
 
 int main()
 {
     ShowConsoleCursor(false);
-    Map map;
-    Tank* player = new Tank("Player", 100, 0, 0, Type::player);
-    int taille = 5;
-    Mur* mur[5] = { new Mur(3, 2, 4, Direction::Bas), new Mur(15, 13, 6, Direction::Haut), new Mur(10, 0, 6, Direction::Droit), new Mur(2, 13, 6, Direction::Gauche), new Mur(17, 17, 6, Direction::Haut) };
-    map.ajoutMur(mur, taille);
-    map.ajouter(player);
-    map.spawnTankEnnemie(6,20,100, player);
-    thread affichage(refresh, map, player);
+    int niveau = 0;
+    int maxNiveau = 2;
+    int nombreNiveau = 10;
+    int tailleJeux = 20;
+    int nombreEnnemie = 1;
+    Map* map = new Map(tailleJeux,nombreEnnemie);
+    srand(time(NULL));
+    int nombreMurs = rand() % 16;
+    map->generateurMap();
+    Tank* player = map->getPlayer();
+    thread affichage(refresh, map, player, maxNiveau);
     thread gestionMissile(gestionMissiles, map);
+    thread gestionEnnemie(gestionEnnemies, map);
     while (true)
     {
         if (GetKeyState('W') & 0x8000) {
-            map.deplacer(player,"W");
+            map->deplacer(player,"W");
         }
         if (GetKeyState('S') & 0x8000) {
-            map.deplacer(player, "S");
+            map->deplacer(player, "S");
         }
         if (GetKeyState('A') & 0x8000) {
-            map.deplacer(player, "A");
+            map->deplacer(player, "A");
         }
         if (GetKeyState('D') & 0x8000) {
-            map.deplacer(player, "D");
+            map->deplacer(player, "D");
         }
         if (GetKeyState(VK_SPACE) & 0x8000) {
             player->dropBombe(true);
@@ -72,20 +107,17 @@ int main()
         if (GetKeyState('E') & 0x8000) {
             player->shoot(true);
         }
-        if (GetKeyState(VK_UP) & 0x8000) {
-            map.deplacerCanon(player, "UP", 1);
-        }
-        if (GetKeyState(VK_DOWN) & 0x8000) {
-            map.deplacerCanon(player, "DOWN", 1);
-        }
         if (GetKeyState(VK_LEFT) & 0x8000) {
-            map.deplacerCanon(player, "LEFT", 1);
+            map->deplacerCanon(player, "LEFT", 1);
         }
         if (GetKeyState(VK_RIGHT) & 0x8000) {
-            map.deplacerCanon(player, "RIGHT", 1);
+            map->deplacerCanon(player, "RIGHT", 1);
+        }
+        if (GetKeyState('P') & 0x8000) {
+            map->killAllTank();
         }
         Sleep(100);
     }
-
+    return 0;
 }
 
