@@ -19,8 +19,8 @@ Map::Map()
 	genererMap();
 }
 
-Map::Map(int m_taille, int m_nombreEnnemie) {
-	niveau = 1;
+Map::Map(int m_taille, int m_nombreEnnemie, int m_niveau) {
+	niveau = m_niveau;
 	taille = m_taille;
 	nombreEnnemie = m_nombreEnnemie;
 	map = new std::string*[m_taille];
@@ -34,6 +34,18 @@ Map::Map(int m_taille, int m_nombreEnnemie) {
 	genererMap();
 }
 
+Map::~Map()
+{
+	tanks->clear();
+	missilles->clear();
+	tanks = nullptr;
+	missilles = nullptr;
+	player = nullptr;
+	delete map;
+}
+
+
+
 void Map::afficheMap(std::ostream& o, Tank* m_tank)
 {
 	o.clear();
@@ -44,6 +56,7 @@ void Map::afficheMap(std::ostream& o, Tank* m_tank)
 	{
 		for (int z = 0; z < taille; z++)
 		{
+			//std::printf("Salur");
 			std::cout << map[i][z];
 		}
 		std::cout << std::endl;
@@ -166,9 +179,10 @@ void Map::canonEnnemie() {
 
 void Map::pathEnnemie()
 {
-		for (int i = 0; i < tanks->size(); i++)
-		{
-			Sleep(500);
+	for (int i = 0; i < tanks->size(); i++)
+	{
+		try {
+			Sleep(1000);
 			canonEnnemie();
 			TankEnnemie* tankEnnemie = tanks->at(i);
 			Coordonnee coordonneePlayer = tanks->at(i)->getTarget()->getCoordonnee();
@@ -204,6 +218,10 @@ void Map::pathEnnemie()
 				}
 			}
 		}
+		catch (const std::out_of_range& oor) {
+			i = 0;
+		}
+	}
 }
 
 Tank* Map::getPlayer()
@@ -229,30 +247,23 @@ int Map::getNiveau()
 void Map::addOneNiveau()
 {
 	niveau += 1;
-	//missilles->clear();
-	//tanks->clear();
-	//for (int i = 0; i < taille; i++)
-	//{
-	//	map[i] = new std::string[taille];
-	//}
-	//genererMap();
 }
 
 void Map::deplacementEnnemie(TankEnnemie* m_tankEnnemie, std::string m_key, int m_x, int m_y) {
 	if (map[m_tankEnnemie->getCoordonnee().x + m_x][m_tankEnnemie->getCoordonnee().y + m_y] == " ") {
-		//deplacer(m_tankEnnemie, m_key);
+		deplacer(m_tankEnnemie, m_key);
 	}
 	else if (map[m_tankEnnemie->getCoordonnee().x - 1][m_tankEnnemie->getCoordonnee().y] == " ") {
-		//deplacer(m_tankEnnemie, "W");
+		deplacer(m_tankEnnemie, "W");
 	}
 	else if (map[m_tankEnnemie->getCoordonnee().x + 1][m_tankEnnemie->getCoordonnee().y] == " ") {
-		//deplacer(m_tankEnnemie, "S");
+		deplacer(m_tankEnnemie, "S");
 	}
 	else if (map[m_tankEnnemie->getCoordonnee().x][m_tankEnnemie->getCoordonnee().y - 1] == " ") {
-		//deplacer(m_tankEnnemie, "A");
+		deplacer(m_tankEnnemie, "A");
 	}
 	else if (map[m_tankEnnemie->getCoordonnee().x][m_tankEnnemie->getCoordonnee().y + 1] == " ") {
-		//deplacer(m_tankEnnemie, "D");
+		deplacer(m_tankEnnemie, "D");
 	}
 
 }
@@ -349,22 +360,31 @@ void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 
 void Map::ajoutMur(std::vector<Mur*> mur, int m_taille)
 {
+	if (mur.size() <= 0) {
+		generateurMap();
+	}
 	for (int i = 0; i < mur.size(); i++)
 	{
 		for (int z = 0; z < mur.at(i)->getLongueur(); z++)
 		{
-			if ((mur.at(i)->getCoordonnee().x + z) < taille  && (mur.at(1)->getCoordonnee().y + z) < taille) {
-				if (mur.at(i)->getDirection() == Direction::Haut)
-				{
+			if (mur.at(i)->getDirection() == Direction::Haut)
+			{
+				if ((mur.at(i)->getCoordonnee().x + z + 1) < taille && (mur.at(1)->getCoordonnee().y) < taille) {
 					map[mur.at(i)->getCoordonnee().x + z][mur.at(i)->getCoordonnee().y] = "#";
 				}
-				else if (mur.at(i)->getDirection() == Direction::Bas) {
+			}
+			else if (mur.at(i)->getDirection() == Direction::Bas) {
+				if ((mur.at(i)->getCoordonnee().x - z - 1) < taille && (mur.at(1)->getCoordonnee().y) < taille) {
 					map[mur.at(i)->getCoordonnee().x - z][mur.at(i)->getCoordonnee().y] = "#";
 				}
-				else if (mur.at(i)->getDirection() == Direction::Gauche) {
+			}
+			else if (mur.at(i)->getDirection() == Direction::Gauche) {
+				if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y - z - 1) < taille) {
 					map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y - z] = "#";
 				}
-				else if (mur.at(i)->getDirection() == Direction::Droit) {
+			}
+			else if (mur.at(i)->getDirection() == Direction::Droit) {
+				if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y) < taille + z + 1) {
 					map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y + z] = "#";
 				}
 			}
@@ -604,8 +624,7 @@ void Map::degatEnnemie(Missile* m_missile)
 void Map::deplacementMissileAffichage()
 {
 	if (missilles->size() != 0) {
-		for (int i = 0; i < missilles->size(); i++)
-		{
+		for (int i = 0; i < missilles->size(); i++){
 			if (missilles->at(i)->getDirection() == Direction::Haut) {
 				map[missilles->at(i)->getCoordonnee().x][missilles->at(i)->getCoordonnee().y] = " ";
 				missilles->at(i)->moveX(-1);
@@ -741,7 +760,7 @@ void Map::generateurMap() {
 	//murs.push_back(new Mur(20, 18, 7, Direction::Haut));
 	//murs.push_back(new Mur(5, 5, 5, Direction::Haut));
 	//murs.push_back(new Mur(5, 12, 5, Direction::Droit));
-	/*for (int i = 0; i < nombreMurs; i++) {
+	for (int i = 0; i < nombreMurs; i++) {
 		int x = rand() % taille;
 		int y = rand() % taille;
 		int longeur = rand() % (taille / 10) + 2;
@@ -769,20 +788,14 @@ void Map::generateurMap() {
 			longeur = 2;
 		}
 		murs.push_back(new Mur(x, y, longeur, direction));
-	}*/
-	//ajoutMur(murs, nombreMurs);
+	}
+	ajoutMur(murs, nombreMurs);
 	ajouter(player);
-	spawnTankEnnemie(nombreEnnemie, 50, 100, player);
+	spawnTankEnnemie(nombreEnnemie, 50, 2, player);
 }
 
 void Map::killAllTank()
 {
-	for (int i = 0; i < tanks->size(); i++)
-	{
-		if (tanks->at(i)->loseHealth(100)) {
-			map[tanks->at(i)->getCoordonnee().x][tanks->at(i)->getCoordonnee().y] = " ";
-			map[tanks->at(i)->getCanon().getCoordonnee().x][tanks->at(i)->getCanon().getCoordonnee().y] = " ";
-			retirer(i);
-		}
-	}
+	tanks->clear();
+	Sleep(200);
 }

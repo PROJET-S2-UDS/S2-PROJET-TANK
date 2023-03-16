@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <cstdlib>
 #include <ctime>
+#include <mutex>
 
 #include "tank.h"
 #include "mur.h"
@@ -33,7 +34,8 @@ private:
 	void deplacementEnnemie(TankEnnemie* m_tankEnnemie, std::string m_key, int m_x, int m_y);
 public:
 	Map();
-	Map(int m_taille, int m_nombreEnnemie);
+	Map(int m_taille, int m_nombreEnnemie, int m_niveau);
+	~Map();
 	void afficheMap(std::ostream& o, Tank* m_tank);
 	void ajouter(Tank* m_tank);
 	void deplacer(Tank* m_tank, std::string m_keyPress);
