@@ -13,10 +13,12 @@
 #include "tank.h"
 #include "direction.h"
 #include "menu.h"
+#include "libMannette.h"
 
 using namespace std;
 
 bool active = true;
+bool manetteActive = false;
 
 void ShowConsoleCursor(bool showFlag)
 {
@@ -43,13 +45,17 @@ void gestionEnnemies(Map* map) {
     }
 }
 
-void refresh(Map* map, Tank* m_tank) {
+void refresh(Map* map, Tank* m_tank, LibMannette manette) {
         bool boucle = true;
         COORD p = { 0,0 };
         while (boucle && active)
         {
+            int healthPrevious = m_tank->getHealth();
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
             map->afficheMap(std::cout, m_tank);
+            if (healthPrevious != m_tank->getHealth()) {
+                manette.activer_moteur(true);
+            }
             if (m_tank->getHealth() <= 0) {
                 boucle = false;
             }
@@ -75,6 +81,7 @@ int main()
     ShowWindow(consoleWindow, SW_MAXIMIZE);
 
     ShowConsoleCursor(false);
+    LibMannette manette1 = LibMannette(manetteActive);
     Menu menu;
     while (menu.getChoix() != 3){
         int niveau = 1;
@@ -92,44 +99,44 @@ int main()
                 int nombreMurs = rand() % 16;
                 map->generateurMap();
                 Tank* player = map->getPlayer();
-                thread affichage(refresh, map, player);
+                thread affichage(refresh, map, player, manette1);
                 thread gestionMissile(gestionMissiles, map);
                 thread gestionEnnemie(gestionEnnemies, map);
                 while (active)
                 {
-                    if (GetKeyState('W') & 0x8000) {
+                    manette1.modifier_vie(std::round(player->getHealth()/10));
+                    if (GetKeyState('W') & 0x8000 || (manette1.get_joyStrick_Gauche_X() == 1 && manetteActive) ) {
                         map->deplacer(player, "W");
                     }
-                    if (GetKeyState('S') & 0x8000) {
+                    if (GetKeyState('S') & 0x8000 || (manette1.get_joyStrick_Gauche_X() == -1 && manetteActive)) {
                         map->deplacer(player, "S");
                     }
-                    if (GetKeyState('A') & 0x8000) {
+                    if (GetKeyState('A') & 0x8000 || (manette1.get_joyStrick_Gauche_Y() == 1 && manetteActive)) {
                         map->deplacer(player, "A");
                     }
-                    if (GetKeyState('D') & 0x8000) {
+                    if (GetKeyState('D') & 0x8000 || (manette1.get_joyStrick_Gauche_Y() == -1 && manetteActive)) {
                         map->deplacer(player, "D");
                     }
-                    if (GetKeyState(VK_SPACE) & 0x8000) {
+                    if (GetKeyState(VK_SPACE) & 0x8000 || (manette1.get_accelerometre() && manetteActive)) {
                         player->dropBombe(true);
                     }
-                    if (GetKeyState('E') & 0x8000) {
+                    if (GetKeyState('E') & 0x8000 || (manette1.get_switch1() && manetteActive)) {
                         player->shoot(true);
                     }
-                    if (GetKeyState(VK_LEFT) & 0x8000) {
+                    if (GetKeyState(VK_LEFT) & 0x8000 || (manette1.get_switch2() && manetteActive)) {
                         map->deplacerCanon(player, "LEFT", 1);
                     }
-                    if (GetKeyState(VK_RIGHT) & 0x8000) {
+                    if (GetKeyState(VK_RIGHT) & 0x8000 || (manette1.get_switch3() && manetteActive)) {
                         map->deplacerCanon(player, "RIGHT", 1);
                     }
                     if (GetKeyState('P') & 0x8000) {
                         map->killAllTank();
                     }
-                    if (GetKeyState(VK_ESCAPE) & 0x8000) {
+                    if (GetKeyState(VK_ESCAPE) & 0x8000 || (manette1.get_switch4() && manetteActive)) {
                         active = false;
                         maxNiveau = 0;
                         system("CLS");
                         menu.setChoix(-1);
-                        //exit(0);
                     }
                     Sleep(100);
                 }

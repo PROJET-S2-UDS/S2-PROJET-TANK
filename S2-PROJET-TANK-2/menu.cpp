@@ -56,7 +56,7 @@ void Menu::showCommande()
         << "||                                                          ||\n"
         << "||                  Commande du jeu                         ||\n"
         << "||                                                          ||\n"
-        << "|| Deplacement du joueur :                                     ||\n"
+        << "|| Deplacement du joueur :                                  ||\n"
         << "||      W => Avancer le joueur                              ||\n"
         << "||      S => Reculer le joueur                              ||\n"
         << "||      A => Deplacer vers la gauche                        ||\n"
