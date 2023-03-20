@@ -12,6 +12,7 @@
 #include "map.h"
 #include "tank.h"
 #include "direction.h"
+#include "menu.h"
 
 using namespace std;
 
@@ -42,10 +43,10 @@ void gestionEnnemies(Map* map) {
     }
 }
 
-void refresh(Map* map, Tank* m_tank, int maxNiveau) {
+void refresh(Map* map, Tank* m_tank) {
         bool boucle = true;
         COORD p = { 0,0 };
-        while (boucle)
+        while (boucle && active)
         {
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
             map->afficheMap(std::cout, m_tank);
@@ -74,62 +75,78 @@ int main()
     ShowWindow(consoleWindow, SW_MAXIMIZE);
 
     ShowConsoleCursor(false);
-    int niveau = 1;
-    int maxNiveau = 3;
-    int tailleJeux = 15;
-    int nombreEnnemie = 1;
-    Map* map ;
-    for (int i = 0; i < maxNiveau; i++)
-    {
-        active = true;
-        map = new Map(tailleJeux, nombreEnnemie, niveau);
-        srand(time(NULL));
-        int nombreMurs = rand() % 16;
-        map->generateurMap();
-        Tank* player = map->getPlayer();
-        thread affichage(refresh, map, player, maxNiveau);
-        thread gestionMissile(gestionMissiles, map);
-        thread gestionEnnemie(gestionEnnemies, map);
-        while (active)
-        {
-            if (GetKeyState('W') & 0x8000) {
-                map->deplacer(player, "W");
+    Menu menu;
+    while (menu.getChoix() != 3){
+        int niveau = 1;
+        int maxNiveau = 10;
+        int tailleJeux = 15;
+        int nombreEnnemie = 1;
+        Map* map;
+        menu.show();
+        if (menu.getChoix() == 1) {
+            for (int i = 0; i < maxNiveau; i++)
+            {
+                active = true;
+                map = new Map(tailleJeux, nombreEnnemie, niveau);
+                srand(time(NULL));
+                int nombreMurs = rand() % 16;
+                map->generateurMap();
+                Tank* player = map->getPlayer();
+                thread affichage(refresh, map, player);
+                thread gestionMissile(gestionMissiles, map);
+                thread gestionEnnemie(gestionEnnemies, map);
+                while (active)
+                {
+                    if (GetKeyState('W') & 0x8000) {
+                        map->deplacer(player, "W");
+                    }
+                    if (GetKeyState('S') & 0x8000) {
+                        map->deplacer(player, "S");
+                    }
+                    if (GetKeyState('A') & 0x8000) {
+                        map->deplacer(player, "A");
+                    }
+                    if (GetKeyState('D') & 0x8000) {
+                        map->deplacer(player, "D");
+                    }
+                    if (GetKeyState(VK_SPACE) & 0x8000) {
+                        player->dropBombe(true);
+                    }
+                    if (GetKeyState('E') & 0x8000) {
+                        player->shoot(true);
+                    }
+                    if (GetKeyState(VK_LEFT) & 0x8000) {
+                        map->deplacerCanon(player, "LEFT", 1);
+                    }
+                    if (GetKeyState(VK_RIGHT) & 0x8000) {
+                        map->deplacerCanon(player, "RIGHT", 1);
+                    }
+                    if (GetKeyState('P') & 0x8000) {
+                        map->killAllTank();
+                    }
+                    if (GetKeyState(VK_ESCAPE) & 0x8000) {
+                        active = false;
+                        maxNiveau = 0;
+                        system("CLS");
+                        menu.setChoix(-1);
+                        //exit(0);
+                    }
+                    Sleep(100);
+                }
+                if (!active) {
+                    affichage.join();
+                    gestionMissile.join();
+                    gestionEnnemie.join();
+                    niveau += 1;
+                    tailleJeux += 5;
+                    nombreEnnemie += 1;
+                }
+                cout << " " << std::endl;
             }
-            if (GetKeyState('S') & 0x8000) {
-                map->deplacer(player, "S");
-            }
-            if (GetKeyState('A') & 0x8000) {
-                map->deplacer(player, "A");
-            }
-            if (GetKeyState('D') & 0x8000) {
-                map->deplacer(player, "D");
-            }
-            if (GetKeyState(VK_SPACE) & 0x8000) {
-                player->dropBombe(true);
-            }
-            if (GetKeyState('E') & 0x8000) {
-                player->shoot(true);
-            }
-            if (GetKeyState(VK_LEFT) & 0x8000) {
-                map->deplacerCanon(player, "LEFT", 1);
-            }
-            if (GetKeyState(VK_RIGHT) & 0x8000) {
-                map->deplacerCanon(player, "RIGHT", 1);
-            }
-            if (GetKeyState('P') & 0x8000) {
-                map->killAllTank();
-            }
-            Sleep(100);
         }
-        if (!active) {
-            affichage.join();
-            gestionMissile.join();
-            gestionEnnemie.join();
-            niveau += 1;
-            tailleJeux += 5;
-            nombreEnnemie += 1;
+        else if (menu.getChoix() == 2) {
+            menu.showCommande();
         }
-        cout << " " << std::endl;
     }
     return 0;
 }

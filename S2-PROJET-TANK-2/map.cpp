@@ -62,7 +62,6 @@ void Map::afficheMap(std::ostream& o, Tank* m_tank)
 		std::cout << std::endl;
 	}
 	SpawnMissile(m_tank);
-	std::thread deplacementMissileAffichage();
 }
 
 void Map::ajouter(Tank* m_tank)
@@ -369,23 +368,43 @@ void Map::ajoutMur(std::vector<Mur*> mur, int m_taille)
 		{
 			if (mur.at(i)->getDirection() == Direction::Haut)
 			{
-				if ((mur.at(i)->getCoordonnee().x + z + 1) < taille && (mur.at(1)->getCoordonnee().y) < taille) {
-					map[mur.at(i)->getCoordonnee().x + z][mur.at(i)->getCoordonnee().y] = "#";
+				try {
+					if ((mur.at(i)->getCoordonnee().x + z + 1) < taille && (mur.at(1)->getCoordonnee().y) < taille && mur.at(1)->getCoordonnee().x - z >= 0) {
+						map[mur.at(i)->getCoordonnee().x + z][mur.at(i)->getCoordonnee().y] = "#";
+					}
+				}
+				catch (...) {
+					z = 100;
 				}
 			}
 			else if (mur.at(i)->getDirection() == Direction::Bas) {
-				if ((mur.at(i)->getCoordonnee().x - z - 1) < taille && (mur.at(1)->getCoordonnee().y) < taille) {
-					map[mur.at(i)->getCoordonnee().x - z][mur.at(i)->getCoordonnee().y] = "#";
+				try {
+					if ((mur.at(i)->getCoordonnee().x - z - 1) < taille && (mur.at(1)->getCoordonnee().y) < taille && mur.at(1)->getCoordonnee().x - z >= 0) {
+						map[mur.at(i)->getCoordonnee().x - z][mur.at(i)->getCoordonnee().y] = "#";
+					}
+				}
+				catch (...) {
+					z = 100;
 				}
 			}
 			else if (mur.at(i)->getDirection() == Direction::Gauche) {
-				if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y - z - 1) < taille) {
-					map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y - z] = "#";
+				try {
+					if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y - z - 1) < taille && mur.at(1)->getCoordonnee().y - z >= 0) {
+						map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y - z] = "#";
+					}
+				}
+				catch (...) {
+					z = 100;
 				}
 			}
 			else if (mur.at(i)->getDirection() == Direction::Droit) {
-				if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y) < taille + z + 1) {
-					map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y + z] = "#";
+				try {
+					if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y) < taille + z + 1 && mur.at(1)->getCoordonnee().y - z >= 0) {
+						map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y + z] = "#";
+					}
+				}
+				catch (...) {
+					z = 100;
 				}
 			}
 		}
@@ -613,9 +632,17 @@ void Map::degatEnnemie(Missile* m_missile)
 		Coordonnee tankCoordonnee = tanks->at(i)->getCoordonnee();
 		if ((tankCoordonnee.x == (missileCoordonnee.x + x) && tankCoordonnee.y == (missileCoordonnee.y + y)) || (tankCoordonnee.x == (missileCoordonnee.x + x2) && tankCoordonnee.y == (missileCoordonnee.y + y2))) {
 			if (tanks->at(i)->loseHealth(m_missile->getDegat())) {
-				map[tanks->at(i)->getCoordonnee().x][tanks->at(i)->getCoordonnee().y] = " ";
-				map[tanks->at(i)->getCanon().getCoordonnee().x][tanks->at(i)->getCanon().getCoordonnee().y] = " ";
-				retirer(i);
+				try {
+					map[tanks->at(i)->getCoordonnee().x][tanks->at(i)->getCoordonnee().y] = " ";
+					map[tanks->at(i)->getCanon().getCoordonnee().x][tanks->at(i)->getCanon().getCoordonnee().y] = " ";
+					if (tanks->size() > 0) {
+						retirer(i);
+					}
+				}
+				catch (...) {
+					system("CLS");
+					std::cout << "Erreur";
+				}
 			}
 		}
 	}
