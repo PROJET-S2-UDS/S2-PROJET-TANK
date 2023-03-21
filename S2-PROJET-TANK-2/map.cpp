@@ -357,58 +357,47 @@ void Map::deplacer(Tank* m_tank, std::string m_keyPress)
 	}
 }
 
-void Map::ajoutMur(std::vector<Mur*> mur, int m_taille)
+void Map::ajoutMur(std::vector<Mur*> m_mur, int m_taille)
 {
-	if (mur.size() <= 0) {
+	if (m_mur.size() <= 0) {
 		generateurMap();
 	}
-	for (int i = 0; i < mur.size(); i++)
+	for (int i = 0; i < m_mur.size(); i++)
 	{
-		for (int z = 0; z < mur.at(i)->getLongueur(); z++)
+		for (int j = 0; j < m_mur.at(i)->getLongueur(); j++)
 		{
-			if (mur.at(i)->getDirection() == Direction::Haut)
-			{
-				try {
-					if ((mur.at(i)->getCoordonnee().x + z + 1) < taille && (mur.at(1)->getCoordonnee().y) < taille && mur.at(1)->getCoordonnee().x - z >= 0) {
-						map[mur.at(i)->getCoordonnee().x + z][mur.at(i)->getCoordonnee().y] = "#";
+			if (m_mur.at(i)->getDirection() == Direction::Haut) {
+				if (m_mur.at(i)->getCoordonnee().x - j > 0 && m_mur.at(i)->getCoordonnee().y > 0 && m_mur.at(i)->getCoordonnee().x - j < taille && m_mur.at(i)->getCoordonnee().y < taille) {
+					if (map[m_mur.at(i)->getCoordonnee().x - j][m_mur.at(i)->getCoordonnee().y] == " ") {
+						map[m_mur.at(i)->getCoordonnee().x - j][m_mur.at(i)->getCoordonnee().y] = "#";
 					}
-				}
-				catch (...) {
-					z = 100;
 				}
 			}
-			else if (mur.at(i)->getDirection() == Direction::Bas) {
-				try {
-					if ((mur.at(i)->getCoordonnee().x - z - 1) < taille && (mur.at(1)->getCoordonnee().y) < taille && mur.at(1)->getCoordonnee().x - z >= 0) {
-						map[mur.at(i)->getCoordonnee().x - z][mur.at(i)->getCoordonnee().y] = "#";
+			if (m_mur.at(i)->getDirection() == Direction::Bas) {
+				if (m_mur.at(i)->getCoordonnee().x + j > 0 && m_mur.at(i)->getCoordonnee().y > 0 && m_mur.at(i)->getCoordonnee().x + j < taille && m_mur.at(i)->getCoordonnee().y < taille) {
+					if (map[m_mur.at(i)->getCoordonnee().x + j][m_mur.at(i)->getCoordonnee().y] == " ") {
+						map[m_mur.at(i)->getCoordonnee().x + j][m_mur.at(i)->getCoordonnee().y] = "#";
 					}
-				}
-				catch (...) {
-					z = 100;
 				}
 			}
-			else if (mur.at(i)->getDirection() == Direction::Gauche) {
-				try {
-					if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y - z - 1) < taille && mur.at(1)->getCoordonnee().y - z >= 0) {
-						map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y - z] = "#";
+
+			if (m_mur.at(i)->getDirection() == Direction::Gauche) {
+				if (m_mur.at(i)->getCoordonnee().x > 0 && m_mur.at(i)->getCoordonnee().y - j > 0 && m_mur.at(i)->getCoordonnee().x < taille && m_mur.at(i)->getCoordonnee().y < taille - j) {
+					if (map[m_mur.at(i)->getCoordonnee().x][m_mur.at(i)->getCoordonnee().y - j] == " ") {
+						map[m_mur.at(i)->getCoordonnee().x][m_mur.at(i)->getCoordonnee().y - j] = "#";
 					}
-				}
-				catch (...) {
-					z = 100;
 				}
 			}
-			else if (mur.at(i)->getDirection() == Direction::Droit) {
-				try {
-					if ((mur.at(i)->getCoordonnee().x) < taille && (mur.at(1)->getCoordonnee().y) < taille + z + 1 && mur.at(1)->getCoordonnee().y - z >= 0) {
-						map[mur.at(i)->getCoordonnee().x][mur.at(i)->getCoordonnee().y + z] = "#";
+			if (m_mur.at(i)->getDirection() == Direction::Droit) {
+				if (m_mur.at(i)->getCoordonnee().x  > 0 && m_mur.at(i)->getCoordonnee().y + j > 0 && m_mur.at(i)->getCoordonnee().x < taille && m_mur.at(i)->getCoordonnee().y < taille + j) {
+					if (map[m_mur.at(i)->getCoordonnee().x][m_mur.at(i)->getCoordonnee().y + j] == " ") {
+						map[m_mur.at(i)->getCoordonnee().x][m_mur.at(i)->getCoordonnee().y + j] = "#";
 					}
-				}
-				catch (...) {
-					z = 100;
 				}
 			}
 		}
 	}
+	
 }
 
 void Map::deplacerCanon(Tank* m_tank, std::string m_keyPress, int m_value)
@@ -782,15 +771,15 @@ void Map::generateurMap() {
 	int nombreMurs = rand() % 16;
 	std::vector<Mur*> murs;
 	Tank* player = new Tank("Player", 100, 0, 0, Type::player);
-	//murs.push_back(new Mur(0, 12, 5, Direction::Droit));
-	//murs.push_back(new Mur(10, 6, 6, Direction::Droit));
-	//murs.push_back(new Mur(20, 18, 7, Direction::Haut));
-	//murs.push_back(new Mur(5, 5, 5, Direction::Haut));
-	//murs.push_back(new Mur(5, 12, 5, Direction::Droit));
-	for (int i = 0; i < nombreMurs; i++) {
+	murs.push_back(new Mur(0, 12, 5, Direction::Droit));
+	murs.push_back(new Mur(10, 6, 6, Direction::Droit));
+	murs.push_back(new Mur(20, 18, 7, Direction::Haut));
+	murs.push_back(new Mur(5, 5, 5, Direction::Haut));
+	murs.push_back(new Mur(5, 12, 5, Direction::Droit));
+	/*for (int i = 0; i < nombreMurs; i++) {
 		int x = rand() % taille;
 		int y = rand() % taille;
-		int longeur = rand() % (taille / 10) + 2;
+		int longeur = rand() % 5;
 		int directionNumber = rand() % 4;
 		Direction direction;
 		if (directionNumber == 0) {
@@ -811,12 +800,18 @@ void Map::generateurMap() {
 		if (y < 0) {
 			y = 0;
 		}
+		if (x > taille) {
+			x = taille;
+		}
+		if (y > taille) {
+			y = taille;
+		}
 		if (longeur < 2) {
-			longeur = 2;
+			longeur =3;
 		}
 		murs.push_back(new Mur(x, y, longeur, direction));
-	}
-	ajoutMur(murs, nombreMurs);
+	}*/
+	ajoutMur(murs, murs.size());
 	ajouter(player);
 	spawnTankEnnemie(nombreEnnemie, 50, 2, player);
 }

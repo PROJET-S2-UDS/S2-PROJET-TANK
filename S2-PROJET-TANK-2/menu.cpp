@@ -14,22 +14,22 @@ void Menu::show(LibMannette manette, bool manetteActive) {
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n"
-        << "||   Q. Commencer une partie            ||\n"
-        << "||   W. Les commandes                   ||\n"
-        << "||   E. Quitter l'application           ||\n"
+        << "||   1. Commencer une partie            ||\n"
+        << "||   2. Les commandes                   ||\n"
+        << "||   3. Quitter l'application           ||\n"
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n";
     bool active = true;
     while(active){
-        if (GetKeyState('Q') & 0x8000 || (manette.get_switch1() && manetteActive)) {
+        if (GetKeyState('1') & 0x8000 || (manette.get_switch1() && manetteActive)) {
             choix = 1;
             active = false;
         }
-        else if (GetKeyState('W') & 0x8000 || (manette.get_switch2() && manetteActive)) {
+        else if (GetKeyState('2') & 0x8000 || (manette.get_switch2() && manetteActive)) {
             choix = 2;
             active = false;
         }
-        else if (GetKeyState('E') & 0x8000 || (manette.get_switch3() && manetteActive)) {
+        else if (GetKeyState('3') & 0x8000 || (manette.get_switch3() && manetteActive)) {
             choix = 3;
             active = false;
         }
@@ -61,7 +61,7 @@ int Menu::getChoix()
 void Menu::showCommande(LibMannette manette, bool manetteActive)
 {
     std::string value;
-    std::cout << "||                                                                        ||\n"
+    std::cout << "||                                                                      ||\n"
         << "||                                                                      ||\n"
         << "||                  Commande du jeu                                     ||\n"
         << "||                                                                      ||\n"
@@ -84,12 +84,13 @@ void Menu::showCommande(LibMannette manette, bool manetteActive)
         << "||      Joystick vers la droite => Deplacer vers la droite              ||\n"
         << "||      Bouton en haut droite => Pour retourner au menu principal       ||\n"
         << "||      Bouton en haut au milieu => Tirer un missile                    ||\n"
-        << "||      Bouton à gauche au milieu => Deplacer le canon vers la gauche   ||\n"
-        << "||      Bouton à droite au milieu => Deplacer le canon vers la droite   ||\n\n\n";
-    std::cout << "Q pour quitter ou le bouton retour";
+        << "||      Secouer la manette de haut en bas => Deposer une bombe          ||\n" 
+        << "||      Bouton a gauche au milieu => Deplacer le canon vers la gauche   ||\n"
+        << "||      Bouton a droite au milieu => Deplacer le canon vers la droite   ||\n\n\n";
+    std::cout << "Escape pour quitter ou le bouton retour";
     bool active = true;
     while (active) {
-        if (GetKeyState('Q') & 0x8000 || (manette.get_switch4() && manetteActive)) {
+        if (GetKeyState(VK_ESCAPE) & 0x8000 || (manette.get_switch4() && manetteActive)) {
             choix = -1;
             active = false;
         }

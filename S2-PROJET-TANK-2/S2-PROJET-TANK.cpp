@@ -142,10 +142,13 @@ int main()
                 }
                 if (!active) {
                     affichage.join();
+                    system("CLS");
                     gestionMissile.join();
                     gestionEnnemie.join();
                     niveau += 1;
-                    tailleJeux += 5;
+                    if (niveau < 7) {
+                        tailleJeux += 5;
+                    }
                     nombreEnnemie += 1;
                 }
                 cout << " " << std::endl;
