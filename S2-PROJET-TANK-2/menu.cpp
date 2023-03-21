@@ -6,7 +6,7 @@ Menu::Menu() {
      choix = -1;
 }
 
-void Menu::show() {
+void Menu::show(LibMannette manette, bool manetteActive) {
     std::cout << "||--------------------------------------||\n"
         << "||--------------------------------------||\n"
         << "||--------BIENVENUE DANS LE JEU---------||\n"
@@ -14,18 +14,27 @@ void Menu::show() {
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n"
-        << "||   1. Commencer une partie            ||\n"
-        << "||   2. Les commandes                   ||\n"
-        << "||   3. Quitter l'application           ||\n"
+        << "||   Q. Commencer une partie            ||\n"
+        << "||   W. Les commandes                   ||\n"
+        << "||   E. Quitter l'application           ||\n"
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n";
-        std::cout << "Entrez votre choix (1-3): ";
-        std::cin >> choix;
-        if (choix < 0 || choix > 4) {
-            std::cout << "Choix invalide, veuillez réessayer.\n";
-            choix = -1;
+    bool active = true;
+    while(active){
+        if (GetKeyState('Q') & 0x8000 || (manette.get_switch1() && manetteActive)) {
+            choix = 1;
+            active = false;
         }
-        system("CLS");
+        else if (GetKeyState('W') & 0x8000 || (manette.get_switch2() && manetteActive)) {
+            choix = 2;
+            active = false;
+        }
+        else if (GetKeyState('E') & 0x8000 || (manette.get_switch3() && manetteActive)) {
+            choix = 3;
+            active = false;
+        }
+    }
+    system("CLS");
 }
 
 void Menu::executeChoice() {
@@ -49,29 +58,43 @@ int Menu::getChoix()
     return choix;
 }
 
-void Menu::showCommande()
+void Menu::showCommande(LibMannette manette, bool manetteActive)
 {
     std::string value;
-    std::cout << "||                                                          ||\n"
-        << "||                                                          ||\n"
-        << "||                  Commande du jeu                         ||\n"
-        << "||                                                          ||\n"
-        << "|| Deplacement du joueur :                                  ||\n"
-        << "||      W => Avancer le joueur                              ||\n"
-        << "||      S => Reculer le joueur                              ||\n"
-        << "||      A => Deplacer vers la gauche                        ||\n"
-        << "||      D => Deplacer vers la droite                        ||\n"
-        << "||      flece gauche (<-) Deplacer le canon vers la gauche  ||\n"
-        << "||      fleche droite (->) Deplacer le canon vers la droite ||\n"
-        << "||      E => Tirer un missile                               ||\n"
-        << "||      Espace => Deposer une bombe                         ||\n"
-        << "||      Echape => Pour quitter le jeu                       ||\n";
-    std::cout << "Quitter (Q) ";
-    std::cin >> value;
-    if (value == "Q" || value == "q") {
-        system("CLS");
-        choix = -1;
+    std::cout << "||                                                                        ||\n"
+        << "||                                                                      ||\n"
+        << "||                  Commande du jeu                                     ||\n"
+        << "||                                                                      ||\n"
+        << "|| Deplacement du joueur avec le clavier :                              ||\n"
+        << "||      W => Avancer le joueur                                          ||\n"
+        << "||      S => Reculer le joueur                                          ||\n"
+        << "||      A => Deplacer vers la gauche                                    ||\n"
+        << "||      D => Deplacer vers la droite                                    ||\n"
+        << "||      flece gauche (<-) Deplacer le canon vers la gauche              ||\n"
+        << "||      fleche droite (->) Deplacer le canon vers la droite             ||\n"
+        << "||      E => Tirer un missile                                           ||\n"
+        << "||      Espace => Deposer une bombe                                     ||\n"
+        << "||      Echape => Pour quitter le jeu                                   ||\n"
+        << "||                                                                      ||\n"
+        << "||                                                                      ||\n"
+        << "||  Deplacement du joueur avec la manette :                             ||\n"
+        << "||      Joystick vers le haut => Avancer le joueur                      ||\n"
+        << "||      Joystick vers le bas => Reculer le joueur                       ||\n"
+        << "||      Joystick vers la gauche => Deplacer vers la gaucghe             ||\n"
+        << "||      Joystick vers la droite => Deplacer vers la droite              ||\n"
+        << "||      Bouton en haut droite => Pour retourner au menu principal       ||\n"
+        << "||      Bouton en haut au milieu => Tirer un missile                    ||\n"
+        << "||      Bouton à gauche au milieu => Deplacer le canon vers la gauche   ||\n"
+        << "||      Bouton à droite au milieu => Deplacer le canon vers la droite   ||\n\n\n";
+    std::cout << "Q pour quitter ou le bouton retour";
+    bool active = true;
+    while (active) {
+        if (GetKeyState('Q') & 0x8000 || (manette.get_switch4() && manetteActive)) {
+            choix = -1;
+            active = false;
+        }
     }
+    system("CLS");
 }
 
 void Menu::setChoix(int m_choix)

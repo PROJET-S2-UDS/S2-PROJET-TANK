@@ -4,13 +4,15 @@
 #include <string>
 #include <vector>
 
+#include "libMannette.h"
+
 class Menu {
 public:
     Menu();
-    void show();
+    void show(LibMannette manette, bool manetteActive);
     void executeChoice();
     int getChoix();
-    void showCommande();
+    void showCommande(LibMannette manette, bool manetteActive);
     void setChoix(int m_choix);
 private:
     int choix ;

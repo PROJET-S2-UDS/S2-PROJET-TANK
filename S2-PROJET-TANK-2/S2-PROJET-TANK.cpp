@@ -89,7 +89,7 @@ int main()
         int tailleJeux = 15;
         int nombreEnnemie = 1;
         Map* map;
-        menu.show();
+        menu.show(manette1,manetteActive);
         if (menu.getChoix() == 1) {
             for (int i = 0; i < maxNiveau; i++)
             {
@@ -152,7 +152,7 @@ int main()
             }
         }
         else if (menu.getChoix() == 2) {
-            menu.showCommande();
+            menu.showCommande(manette1,manetteActive);
         }
     }
     return 0;

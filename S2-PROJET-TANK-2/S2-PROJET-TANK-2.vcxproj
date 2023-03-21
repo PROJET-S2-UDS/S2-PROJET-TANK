@@ -203,24 +203,31 @@
   <ItemGroup>
     <ClCompile Include="bombe.cpp" />
     <ClCompile Include="canon.cpp" />
+    <ClCompile Include="libMannette.cpp" />
     <ClCompile Include="map.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="missile.cpp" />
     <ClCompile Include="munition.cpp" />
     <ClCompile Include="mur.cpp" />
     <ClCompile Include="S2-PROJET-TANK.cpp" />
+    <ClCompile Include="SerialPort.cpp" />
     <ClCompile Include="tank.cpp" />
     <ClCompile Include="tankEnnemie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Downloads\test_unitaire\test_unitaire\test_unitaire\include\json.hpp" />
     <ClInclude Include="bombe.h" />
     <ClInclude Include="canon.h" />
     <ClInclude Include="coordonnee.h" />
     <ClInclude Include="direction.h" />
     <ClInclude Include="key.h" />
+    <ClInclude Include="libMannette.h" />
+    <ClInclude Include="menu.h" />
     <ClInclude Include="mur.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="missile.h" />
     <ClInclude Include="munition.h" />
+    <ClInclude Include="SerialPort.h" />
     <ClInclude Include="tank.h" />
     <ClInclude Include="tankEnnemie.h" />
     <ClInclude Include="type.h" />
