@@ -19,6 +19,7 @@ using namespace std;
 
 bool active = true;
 bool manetteActive = false;
+bool retourMenu = false;
 
 void ShowConsoleCursor(bool showFlag)
 {
@@ -66,6 +67,8 @@ void refresh(Map* map, Tank* m_tank, LibMannette manette) {
         if (m_tank->getHealth() <= 0) {
             system("CLS");
             cout << "Game Over !";
+            Sleep(1000);
+            retourMenu = true;
         }
         else if (map->getTanks()->empty()) {
             system("CLS");
@@ -90,6 +93,7 @@ int main()
         int nombreEnnemie = 1;
         Map* map;
         menu.show(manette1,manetteActive);
+        retourMenu = false;
         if (menu.getChoix() == 1) {
             for (int i = 0; i < maxNiveau; i++)
             {
@@ -132,7 +136,7 @@ int main()
                     if (GetKeyState('P') & 0x8000) {
                         map->killAllTank();
                     }
-                    if (GetKeyState(VK_ESCAPE) & 0x8000 || (manette1.get_switch4() && manetteActive)) {
+                    if (GetKeyState(VK_ESCAPE) & 0x8000 || (manette1.get_switch4() && manetteActive) || retourMenu) {
                         active = false;
                         maxNiveau = 0;
                         system("CLS");

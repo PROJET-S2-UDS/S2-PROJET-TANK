@@ -768,7 +768,7 @@ void Map::genererMap()
 
 void Map::generateurMap() {
 	srand(time(NULL));
-	int nombreMurs = rand() % 16;
+	int nombreMurs = rand() % (taille / 3);
 	std::vector<Mur*> murs;
 	Tank* player = new Tank("Player", 100, 0, 0, Type::player);
 	murs.push_back(new Mur(0, 12, 5, Direction::Droit));
@@ -776,6 +776,8 @@ void Map::generateurMap() {
 	murs.push_back(new Mur(20, 18, 7, Direction::Haut));
 	murs.push_back(new Mur(5, 5, 5, Direction::Haut));
 	murs.push_back(new Mur(5, 12, 5, Direction::Droit));
+	murs.push_back(new Mur(30, 20, 7, Direction::Haut));
+	murs.push_back(new Mur(25, 15, 5, Direction::Haut));
 	/*for (int i = 0; i < nombreMurs; i++) {
 		int x = rand() % taille;
 		int y = rand() % taille;
