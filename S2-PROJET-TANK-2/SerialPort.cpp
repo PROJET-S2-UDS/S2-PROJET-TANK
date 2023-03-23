@@ -5,7 +5,7 @@
 * LICENSE: MIT
 */
 
-#include "SerialPort.h"
+#include "SerialPort.hpp"
 
 SerialPort::SerialPort(const char* portName, int BAUD)
 {

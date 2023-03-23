@@ -6,7 +6,7 @@ Menu::Menu() {
      choix = -1;
 }
 
-void Menu::show(LibMannette manette, bool manetteActive) {
+void Menu::show(lib_manette* manette) {
     std::cout << "||--------------------------------------||\n"
         << "||--------------------------------------||\n"
         << "||--------BIENVENUE DANS LE JEU---------||\n"
@@ -20,16 +20,17 @@ void Menu::show(LibMannette manette, bool manetteActive) {
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n";
     bool active = true;
+   bool played = PlaySound(TEXT("musique.wav"), NULL, SND_ASYNC);
     while(active){
-        if (GetKeyState('1') & 0x8000 || (manette.get_switch1() && manetteActive)) {
+        if (GetKeyState('1') & 0x8000 || manette->get_switch1() == 1) {
             choix = 1;
             active = false;
         }
-        else if (GetKeyState('2') & 0x8000 || (manette.get_switch2() && manetteActive)) {
+        else if (GetKeyState('2') & 0x8000 || manette->get_switch2() == 1) {
             choix = 2;
             active = false;
         }
-        else if (GetKeyState('3') & 0x8000 || (manette.get_switch3() && manetteActive)) {
+        else if (GetKeyState('3') & 0x8000 || manette->get_switch3() == 1) {
             choix = 3;
             active = false;
         }
@@ -58,7 +59,7 @@ int Menu::getChoix()
     return choix;
 }
 
-void Menu::showCommande(LibMannette manette, bool manetteActive)
+void Menu::showCommande(lib_manette* manette)
 {
     std::string value;
     std::cout << "||                                                                      ||\n"
@@ -90,7 +91,7 @@ void Menu::showCommande(LibMannette manette, bool manetteActive)
     std::cout << "Escape pour quitter ou le bouton retour";
     bool active = true;
     while (active) {
-        if (GetKeyState(VK_ESCAPE) & 0x8000 || (manette.get_switch4() && manetteActive)) {
+        if (GetKeyState(VK_ESCAPE) & 0x8000 || manette->get_switch4() == 1) {
             choix = -1;
             active = false;
         }

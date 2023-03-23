@@ -3,16 +3,16 @@
 
 #include <string>
 #include <vector>
-
-#include "libMannette.h"
+#include <windows.h>
+#include "Manette.hpp"
 
 class Menu {
 public:
     Menu();
-    void show(LibMannette manette, bool manetteActive);
+    void show(lib_manette* manette);
     void executeChoice();
     int getChoix();
-    void showCommande(LibMannette manette, bool manetteActive);
+    void showCommande(lib_manette* manette);
     void setChoix(int m_choix);
 private:
     int choix ;

@@ -71,8 +71,14 @@ void Tank::dropBombe(bool m_etat)
 //Retourne vrai si il reste plus de vie
 bool Tank::loseHealth(int m_health)
 {
+	if (type == Type::player) {
+		bool played = PlaySound(TEXT("degat.wav"), NULL, SND_ASYNC);
+	}
 	health -= m_health;
 	if (health <= 0) {
+		if (type == Type::player) {
+			bool played = PlaySound(TEXT("mort.wav"), NULL, SND_ASYNC);
+		}
 		return true;
 	}
 	return false;

@@ -8,18 +8,22 @@
 #include <sstream>
 #include <time.h>
 #include <cstdio>
+#include <cmath>
 
 #include "map.h"
 #include "tank.h"
 #include "direction.h"
 #include "menu.h"
-#include "libMannette.h"
+#include "Manette.hpp"
+
 
 using namespace std;
 
 bool active = true;
-bool manetteActive = false;
+bool manetteActive = true;
 bool retourMenu = false;
+
+
 
 void ShowConsoleCursor(bool showFlag)
 {
@@ -46,7 +50,7 @@ void gestionEnnemies(Map* map) {
     }
 }
 
-void refresh(Map* map, Tank* m_tank, LibMannette manette) {
+void refresh(Map* map, Tank* m_tank, lib_manette* manette) {
         bool boucle = true;
         COORD p = { 0,0 };
         while (boucle && active)
@@ -55,7 +59,8 @@ void refresh(Map* map, Tank* m_tank, LibMannette manette) {
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
             map->afficheMap(std::cout, m_tank);
             if (healthPrevious != m_tank->getHealth()) {
-                manette.activer_moteur(true);
+                //manette->activer_moteur(true);
+                //manette->activer_moteur(false);
             }
             if (m_tank->getHealth() <= 0) {
                 boucle = false;
@@ -76,6 +81,10 @@ void refresh(Map* map, Tank* m_tank, LibMannette manette) {
         }
 }
 
+void communication(lib_manette* manette) {
+    manette->comm();
+}
+
 int main()
 {
     HWND consoleWindow = GetConsoleWindow();
@@ -84,15 +93,18 @@ int main()
     ShowWindow(consoleWindow, SW_MAXIMIZE);
 
     ShowConsoleCursor(false);
-    LibMannette manette1 = LibMannette(manetteActive);
     Menu menu;
+
+    lib_manette* manette1 = new lib_manette();
+    std::thread communications(communication, manette1);
+    manette1->modifier_vie(5);
     while (menu.getChoix() != 3){
         int niveau = 1;
         int maxNiveau = 10;
         int tailleJeux = 15;
         int nombreEnnemie = 1;
         Map* map;
-        menu.show(manette1,manetteActive);
+        menu.show(manette1);
         retourMenu = false;
         if (menu.getChoix() == 1) {
             for (int i = 0; i < maxNiveau; i++)
@@ -108,41 +120,43 @@ int main()
                 thread gestionEnnemie(gestionEnnemies, map);
                 while (active)
                 {
-                    manette1.modifier_vie(std::round(player->getHealth()/10));
-                    if (GetKeyState('W') & 0x8000 || (manette1.get_joyStrick_Gauche_X() == 1 && manetteActive) ) {
+                    manette1->modifier_vie(2);
+                   /* if (GetKeyState('W') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == 1) {
                         map->deplacer(player, "W");
                     }
-                    if (GetKeyState('S') & 0x8000 || (manette1.get_joyStrick_Gauche_X() == -1 && manetteActive)) {
+                    if (GetKeyState('S') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == -1) {
                         map->deplacer(player, "S");
                     }
-                    if (GetKeyState('A') & 0x8000 || (manette1.get_joyStrick_Gauche_Y() == 1 && manetteActive)) {
+                    if (GetKeyState('A') & 0x8000 || manette1->get_joyStrick_Gauche_X() == -1) {
                         map->deplacer(player, "A");
                     }
-                    if (GetKeyState('D') & 0x8000 || (manette1.get_joyStrick_Gauche_Y() == -1 && manetteActive)) {
+                    if (GetKeyState('D') & 0x8000 || manette1->get_joyStrick_Gauche_X() == 1) {
                         map->deplacer(player, "D");
                     }
-                    if (GetKeyState(VK_SPACE) & 0x8000 || (manette1.get_accelerometre() && manetteActive)) {
+                    if (GetKeyState(VK_SPACE) & 0x8000 || manette1->get_accelerometre() == 1) {
+                        bool played = PlaySound(TEXT("bombe.wav"), NULL, SND_ASYNC);
                         player->dropBombe(true);
                     }
-                    if (GetKeyState('E') & 0x8000 || (manette1.get_switch1() && manetteActive)) {
+                    if (GetKeyState('E') & 0x8000 || manette1->get_switch1() == 1) {
+                        bool played = PlaySound(TEXT("tirer.wav"), NULL, SND_ASYNC);
                         player->shoot(true);
                     }
-                    if (GetKeyState(VK_LEFT) & 0x8000 || (manette1.get_switch2() && manetteActive)) {
+                    if (GetKeyState(VK_LEFT) & 0x8000 || manette1->get_switch2()) {
                         map->deplacerCanon(player, "LEFT", 1);
                     }
-                    if (GetKeyState(VK_RIGHT) & 0x8000 || (manette1.get_switch3() && manetteActive)) {
+                    if (GetKeyState(VK_RIGHT) & 0x8000 || manette1->get_switch3()) {
                         map->deplacerCanon(player, "RIGHT", 1);
                     }
                     if (GetKeyState('P') & 0x8000) {
                         map->killAllTank();
                     }
-                    if (GetKeyState(VK_ESCAPE) & 0x8000 || (manette1.get_switch4() && manetteActive) || retourMenu) {
+                    if (GetKeyState(VK_ESCAPE) & 0x8000 || retourMenu || manette1->get_switch4()) {
                         active = false;
                         maxNiveau = 0;
                         system("CLS");
                         menu.setChoix(-1);
                     }
-                    Sleep(100);
+                    Sleep(100);*/
                 }
                 if (!active) {
                     affichage.join();
@@ -154,14 +168,15 @@ int main()
                         tailleJeux += 5;
                     }
                     nombreEnnemie += 1;
+                    bool played = PlaySound(TEXT("niveau.wav"), NULL, SND_ASYNC);
                 }
                 cout << " " << std::endl;
             }
         }
         else if (menu.getChoix() == 2) {
-            menu.showCommande(manette1,manetteActive);
+            menu.showCommande(manette1);
         }
     }
+    communications.join();
     return 0;
 }
-

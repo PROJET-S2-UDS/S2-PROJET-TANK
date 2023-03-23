@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <windows.h>
 
 #include "coordonnee.h"
 #include "canon.h"
