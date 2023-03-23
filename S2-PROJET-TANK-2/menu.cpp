@@ -33,6 +33,7 @@ void Menu::show(lib_manette* manette) {
         else if (GetKeyState('3') & 0x8000 || manette->get_switch3() == 1) {
             choix = 3;
             active = false;
+            exit(0);
         }
     }
     system("CLS");

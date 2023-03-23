@@ -11,6 +11,7 @@
 #include "tank.h"
 #include "mur.h"
 #include "tankEnnemie.h"
+#include "Manette.hpp"
 
 #ifndef MAP_H
 #define MAP_H

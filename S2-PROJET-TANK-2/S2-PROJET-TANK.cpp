@@ -55,13 +55,8 @@ void refresh(Map* map, Tank* m_tank, lib_manette* manette) {
         COORD p = { 0,0 };
         while (boucle && active)
         {
-            int healthPrevious = m_tank->getHealth();
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), p);
             map->afficheMap(std::cout, m_tank);
-            if (healthPrevious != m_tank->getHealth()) {
-                //manette->activer_moteur(true);
-                //manette->activer_moteur(false);
-            }
             if (m_tank->getHealth() <= 0) {
                 boucle = false;
             }
@@ -118,19 +113,26 @@ int main()
                 thread affichage(refresh, map, player, manette1);
                 thread gestionMissile(gestionMissiles, map);
                 thread gestionEnnemie(gestionEnnemies, map);
+                int viePrecedent = player->getHealth();
                 while (active)
                 {
-                    manette1->modifier_vie(2);
-                   /* if (GetKeyState('W') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == 1) {
+                    if (viePrecedent != player->getHealth()) {
+                        viePrecedent = player->getHealth();
+                        manette1->activer_moteur(true);
+                        Sleep(300);
+                        manette1->activer_moteur(false);
+                    }
+                    manette1->modifier_vie(player->getHealth()/10);
+                   if (GetKeyState('W') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == 1) {
                         map->deplacer(player, "W");
                     }
                     if (GetKeyState('S') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == -1) {
                         map->deplacer(player, "S");
                     }
-                    if (GetKeyState('A') & 0x8000 || manette1->get_joyStrick_Gauche_X() == -1) {
+                    if (GetKeyState('A') & 0x8000 || manette1->get_joyStrick_Gauche_X() == 1) {
                         map->deplacer(player, "A");
                     }
-                    if (GetKeyState('D') & 0x8000 || manette1->get_joyStrick_Gauche_X() == 1) {
+                    if (GetKeyState('D') & 0x8000 || manette1->get_joyStrick_Gauche_X() == -1) {
                         map->deplacer(player, "D");
                     }
                     if (GetKeyState(VK_SPACE) & 0x8000 || manette1->get_accelerometre() == 1) {
@@ -156,7 +158,7 @@ int main()
                         system("CLS");
                         menu.setChoix(-1);
                     }
-                    Sleep(100);*/
+                    Sleep(100);
                 }
                 if (!active) {
                     affichage.join();

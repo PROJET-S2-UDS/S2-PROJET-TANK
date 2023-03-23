@@ -216,7 +216,7 @@ void  lib_manette::set_accelerometre(double val)
 {
     double new_val = abs(val);
 
-    if (new_val > 1023)
+    if (new_val > 400)
         accelerometre = 1;
     else
         accelerometre = 0;

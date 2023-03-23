@@ -7,6 +7,7 @@
 #include "canon.h"
 #include "bombe.h"
 #include "type.h"
+#include "Manette.hpp"
 
 #ifndef TANK_H
 #define TANK_H
