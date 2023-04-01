@@ -20,7 +20,7 @@
 using namespace std;
 
 bool active = true;
-bool manetteActive = true;
+bool manetteActive = false;
 bool retourMenu = false;
 
 
@@ -76,8 +76,10 @@ void refresh(Map* map, Tank* m_tank, lib_manette* manette) {
         }
 }
 
-void communication(lib_manette* manette) {
-    manette->comm();
+void communication(lib_manette* manette, bool manetteActive) {
+    if (manetteActive) {
+        manette->comm();
+    }
 }
 
 int main()
@@ -90,9 +92,11 @@ int main()
     ShowConsoleCursor(false);
     Menu menu;
 
-    lib_manette* manette1 = new lib_manette();
-    std::thread communications(communication, manette1);
-    manette1->modifier_vie(5);
+    lib_manette* manette1  = new lib_manette(manetteActive);
+    std::thread communications(communication, manette1, manetteActive);
+    if (manetteActive) {
+        manette1->modifier_vie(5);
+    }
     while (menu.getChoix() != 3){
         int niveau = 1;
         int maxNiveau = 10;
@@ -122,8 +126,10 @@ int main()
                         Sleep(300);
                         manette1->activer_moteur(false);
                     }
-                    manette1->modifier_vie(player->getHealth()/10);
-                   if (GetKeyState('W') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == 1) {
+                    if(manetteActive){
+                        manette1->modifier_vie(player->getHealth() / 10);
+                    }
+                   if (GetKeyState('W') & 0x8000 || (manette1->get_joyStrick_Gauche_Y() == 1)) {
                         map->deplacer(player, "W");
                     }
                     if (GetKeyState('S') & 0x8000 || manette1->get_joyStrick_Gauche_Y() == -1) {

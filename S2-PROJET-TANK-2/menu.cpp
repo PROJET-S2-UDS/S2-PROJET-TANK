@@ -19,7 +19,7 @@ void Menu::show(lib_manette* manette) {
         << "||   3. Quitter l'application           ||\n"
         << "||--------------------------------------||\n"
         << "||--------------------------------------||\n";
-    bool active = true;
+   bool active = true;
    bool played = PlaySound(TEXT("musique.wav"), NULL, SND_ASYNC);
     while(active){
         if (GetKeyState('1') & 0x8000 || manette->get_switch1() == 1) {

@@ -73,18 +73,20 @@ public:
     int vie = 10;
     bool etat_moteur = false;
     /*----------------------------- Fonction "Main" -----------------------------*/
-    lib_manette()
+    lib_manette(bool manetteActive)
     {
-        string com = "COM4";
-        //cout << "Entrer le port de communication du Arduino: ";
-        //cin >> com;
-        arduino = new SerialPort(com.c_str(), BAUD);
+        if (manetteActive) {
+            string com = "COM4";
+            //cout << "Entrer le port de communication du Arduino: ";
+            //cin >> com;
+            arduino = new SerialPort(com.c_str(), BAUD);
 
-        //const char com = "\\\\.\\COM3";
-        //SerialPort arduino = SerialPort("\\\\.\\COM3");
-        if (!arduino->isConnected()) {
-            cerr << "Impossible de se connecter au port " << string(com) << ". Fermeture du programme!" << endl;
-            exit(1);
+            //const char com = "\\\\.\\COM3";
+            //SerialPort arduino = SerialPort("\\\\.\\COM3");
+            if (!arduino->isConnected()) {
+                cerr << "Impossible de se connecter au port " << string(com) << ". Fermeture du programme!" << endl;
+                exit(1);
+            }
         }
     }
     string raw_msg;
